@@ -1,0 +1,16 @@
+*.o
+\#*#
+*#
+.#*
+.*~
+*~
+.DS_Store
+*.sw[po]
+tags
+*.dSYM
+*.log
+*.dvi
+*.aux
+*.elc
+.vim/bundle/
+
