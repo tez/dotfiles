@@ -1,0 +1,310 @@
+include coffee.underscore.snip
+include coffee.backbone.snip
+
+snippet require
+abbr    require
+options word
+  ${1:object} = require('$1')
+
+snippet unless
+abbr    unless ...
+options word
+  unless ${1:condition}
+    ${2}
+
+snippet if
+abbr    if ...
+options word
+  if ${1:condition}
+    ${2}
+
+snippet tryc
+abbr    try catch
+options word
+  try
+    ${1}
+  catch error
+    ${2}
+
+snippet elsif
+abbr    else if
+options word
+  else if ${1:condition}
+    ${2}
+
+snippet ifthen
+abbr    if ... then ... else ...
+options word
+  if ${1:condition} then ${2} else ${3}
+
+snippet switch
+abbr    switch object when ...
+options word
+  switch ${1:object}
+  when ${2:value}
+    ${3}
+
+snippet when
+abbr    when ...
+options word
+  when ${1:value}
+    ${2}
+
+snippet forin
+abbr    for name in [start..end] by step}
+options word
+  for ${1:name} in [${2:start}..${3:finish}]${4: by ${5:#:step\}}
+    ${6}
+
+snippet for
+abbr    for name in array by step}
+options word
+  for ${1:name} in ${2:array}
+    ${3}
+
+snippet forof
+abbr    for name of object
+options word
+  for ${1:#:key}, ${2:#:value} of ${3:#:object}
+    ${0:TARGET}
+
+snippet function
+abbr    -> ...
+alias   fun
+options word
+  ${1:name} = ${(2) }->
+    ${3}
+
+snippet bfunction
+abbr    -> ...
+alias   bfun
+options word
+  ${1:name} = ${(2) }=>
+    ${3}
+
+
+snippet class
+abbr    class ... extends ...
+options word
+  class ${1:ClassName}${2: extends ${3:Ancestor\}}
+    constructor: ${4:(${5:\})} ->
+       ${5}
+
+
+# js#{{{
+snippet     js
+    JSON.stringify(${1})
+
+snippet     jp
+    JSON.parse(${1})
+
+snippet     con
+    constructor : (${1})->
+      ${2}
+#}}}
+
+# coffee#{{{
+snippet     debug
+    console?.debug ${1}
+
+snippet     log
+    console?.log ${1}
+
+snippet     warn
+    console?.warn ${1}
+
+# snippet     class
+# abbr        class ...
+# options     word
+#   class ${1:Klass}
+#     constructor: ${2} ->
+#     ${3}
+#}}}
+
+# jquery#{{{
+snippet     ajax
+    $.ajax({
+      url: ${1:http://..}
+      async: ${2:true/false}
+      dataType: ${3:'json' }
+    })
+
+snippet     getj
+    $.ajaxSetup { cache: false, async:${1} } # IE hack
+    _json = $.getJSON(
+      "${2:https://graph.facebook.com/#{ id }}",
+      (data, status)->
+        ${3}
+      'jsonp'
+    )
+
+snippet     ready
+    $(document).ready ->
+      ${1}
+
+snippet     ex
+    extends ${1}
+
+snippet     form_value_by_name
+  $("${1:selector} [name=${2:name}]").val()
+
+
+#}}}
+
+###
+# 便利な関数#{{{
+###
+snippet ffillBlank
+    _fillBlank = (target, length, word="0")->
+      strArray = []
+      strArray.push(word) for num in [ 0..length - target.length ]
+      strArray.push(target)
+      strArray.join()
+
+snippet fextend
+    extend = (obj, mixin) ->
+      obj[name] method for name, method of mixin
+      obj
+
+
+snippet finclude
+    extend = (obj, mixin) ->
+      obj[name] method for name, method of mixin
+      obj
+
+    include = (klass, mixin) ->
+      extend klass.prototype.mixin
+
+snippet cModule
+    class Module
+      MODULE_KEYWORDS = ['extended', 'included']
+      @extend: (obj) ->
+        for key, value of obj when key not in MODULE_KEYWORDS
+          @[key] = value
+
+        obj.extended?.apply(@)
+        @
+
+      # ${1:indent修正}
+      @include: (obj) ->
+        for key, value of obj when key not in MODULE_KEYWORDS
+          # Assign properties to tye prototype
+          @::[key] = value
+
+        obj.included?.apply(@)
+        @
+
+snippet ftype
+    type = do ->
+      classToType = {}
+      for name in "Boolean Number String Function Array Date RegExp Undefined Null".split(" ")
+        classToType["[object " + name + "]"] = name.toLowerCase()
+
+      (obj) ->
+        strType = Object::toString.call(obj)
+        classToType[strType] or "object"
+
+snippet  strict
+    'use strict'
+
+snippet  req
+    ${1} = require '${2}'
+
+snippet  cMixin
+    class Mixin
+      include: (t) ->
+        (t[n] = m unless n == 'augment' or !this[n].prototype?) for n, m of this
+
+snippet     random_int
+  randnum = Math.floor( Math.random() * 100000000 )
+
+snippet     frandom_str
+  randobet = (length, extendStr = "") ->
+    strList = 'abcdefghijklmnopqrstuvwxyz' + 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' + '0123456789' + extendStr
+
+    strListArray = strList.split('')
+
+    result = ''
+
+    for int in [length...0]
+      random = Math.floor(Math.random() * strListArray.length)
+      result += strListArray[random]
+
+    result
+
+snippet     ftoggle
+  toggleImg = (own) ->
+    off_rgxp = /off\./
+    on_rgxp  = /on\./
+    after    = null
+
+    $target  = $(own)
+    before   = $target.attr("src")
+    if before.match(off_rgxp)
+      after    = before.replace(off_rgxp, "on.")
+    else
+      after    = before.replace(on_rgxp, "off.")
+
+    $target.attr("src", after)
+
+  $(document).ready ->
+    $(".toggle").hover(
+      ->
+        toggleImg $(@).find("img")
+      ->
+        toggleImg $(@).find("img")
+    )
+
+#}}}
+
+###
+# よく使うお決まり{{{##
+snippet     beforeunload
+abbr        ページ離脱者防止script
+options     word
+  $(window).on 'beforeunload', ->
+    'このページから移動しますか？'
+##}}}
+
+###
+# rdoc /*{{{*/
+snippet     ##
+  ##
+  # ${1}
+
+snippet     @s
+abbr        @see
+  @see ${1:Class}
+
+snippet     @p
+abbr        @param [Class] ...
+  @param [${1:Class}] ${2:...}
+
+snippet     @e
+abbr        @example ...
+  @example ${1:...}
+
+    ${2:sample}
+
+snippet     @r
+abbr        @return [Class] ...
+  @return [${1:Class}] ${2:...}
+
+snippet     @ra
+abbr        @throw [${1:Class}] ...
+  @raise [${1:Class}] ${2:...}
+#}}}
+
+# IE hack
+snippet     if_ie
+abbr        if $.browser.msie and $.browser.version <= ...
+options     word
+  if $.browser.msie and $.browser.version <= ${1:8}
+    ${2}
+
+snippet     fix_ie_click_image_into_label
+abbr        fix_ie_click_image_into_label
+options     word
+  if $.browser.msie and $.browser.version <= 8
+    $('label > img').click ->
+      $('#'+$(this).parent().attr('for')).focus().click()

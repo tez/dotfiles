@@ -1,0 +1,395 @@
+include ruby.standard_library.snip
+include ruby.buildin_library.snip
+include ruby.rdoc.snip
+include ruby.yard.snip
+include ruby.algorithm.snip
+
+# Magic code#{{{
+snippet   utf
+abbr      utf-8 magick
+prev_word '^'
+  # coding: utf-8
+
+snippet   #!
+abbr      #!/usr/local/bin/ruby
+prev_word '^'
+  #!/usr/local/bin/ruby
+#}}}
+
+# Class / Module#{{{
+snippet module
+abbr    module Name ... end
+options word
+  module ${1:auto_name}
+    ${2}
+  end
+
+snippet concern
+abbr    extend ActiveSupport::Concern; module ClassMethods...
+options word
+  extend ActiveSupport::Concern
+
+  module ClassMethods
+    ${1}
+  end
+
+  included do
+  end
+
+snippet alias
+abbr    alias :new_name :old_name
+options word
+  alias :${1:new_name} :${2:old_name}
+
+snippet autoload
+abbr    autoload :Name, 'path/to/file'
+options word
+  autoload :${1:Name}, '${2:path/to/file}'
+
+snippet ini
+abbr    def initialize end
+  def initialize${1}
+    ${2}
+  end
+
+snippet const_set
+abbr    const_set(name, value)
+options word
+  const_set(:${1:name}, ${2:value})
+#}}}
+
+# Keyword for method#{{{
+snippet lam
+alias   lambda
+abbr    lambda do end
+  lambda do |${1}|
+    ${2}
+  end
+
+snippet ->
+abbr    ->
+options word
+  -> (${1}) { ${2} }
+
+snippet def
+abbr    def
+options word
+  def ${1:method_name}
+    ${2}
+  end
+
+snippet refine
+abbr    refine Module { ... }
+options word
+  refine ${1:Module} do
+    ${2}
+  end
+
+snippet using
+abbr    using Module
+options word
+  using ${1:Module}
+#}}}
+
+# Branch on condition#{{{
+snippet if
+abbr    if
+options word
+  if ${1:condition}
+    ${2}
+  end
+
+snippet ife
+abbr    if ... else ... end
+options word
+  if ${1:condition}
+    ${2}
+  else
+    ${3}
+  end
+
+snippet elsif
+abbr    elsif ...
+options word
+  elsif ${1:condition}
+    ${2}
+
+snippet unless
+abbr    unless ...
+options word
+  unless ${1:condition}
+
+snippet while
+abbr    while end
+options word
+  while ${1} do
+    ${2}
+  end
+
+snippet loop
+abbr    loop do ... end
+options word
+  loop do
+    ${1}
+  end
+
+snippet until
+abbr    until ...
+options word
+  until ${1:condition}
+    ${2}
+  end
+
+snippet class
+abbr    class ... end
+options word
+  class ${1:auto_name}
+    ${2}
+  end
+
+snippet case
+abbr    case
+options word
+  case ${1:object}
+  when ${2:condition}
+    ${3}
+  end
+
+snippet when
+abbr    when
+options word
+  when ${1:condition}
+    ${2}
+
+
+snippet begin
+abbr    begin rescue end
+options word
+  begin
+    ${1}
+  rescue => e
+    ${2}
+  end
+
+snippet begine
+abbr    begin rescue end
+options word
+  begine
+  begin
+    ${1}
+  rescue => e
+    ${2}
+  ensure
+    ${3}
+  end
+#}}}
+
+# Kernel / Module Method {{{
+snippet require
+abbr    require
+alias   req
+options word
+  require '${1}'
+
+snippet alias_method
+abbr    alias_method
+options word
+  alias_method ${1:to}, ${2:from}
+
+snippet define_method
+abbr    define_method
+options word
+  define_method :${1:method_name} do |${2:*args}|
+    ${3}
+  end
+
+snippet attr_accessor
+abbr    attr_accessor *args
+options word
+  attr_accessor :${1:*names}
+
+snippet attr_reader
+abbr    attr_reader *args
+options word
+  attr_reader :${1:*names}
+
+snippet attr_writer
+abbr    attr_writer *args
+options word
+  attr_writer :${1:*names}
+#}}}
+
+# ruby_custom {{{
+snippet require_relational
+abbr    require File.expand_path(File.dirname(__FILE__) + '...')
+options word
+  require File.expand_path(File.dirname(__FILE__) + '${1}')
+# }}}
+
+# Matching#{{{
+snippet     match_japanese
+abbr        match_japanese
+options     word
+  /[ぁ-んァ-ヴ一-龠亜-煕]/u
+#}}}
+
+# Gem#{{{
+snippet     binding
+abbr        binding
+alias       pry
+options     word
+  binding.pry;
+#}}}
+
+# Snippet#{{{
+snippet Stub_get
+abbr    Stub_get
+options word
+  module Stub
+    def gets
+      @count = -1 unless @count
+      @count += 1
+      [
+        [
+          ${1}
+        ],
+      ][0][@count]
+    end
+  end
+  extend Stub
+
+snippet benchmark
+abbr    benchmark
+options word
+  require 'benchmark'
+  puts Benchmark::CAPTION
+  puts Benchmark.measure {
+    ${1}
+  }
+
+snippet parent_directory
+abbr    parent_directory
+options word
+  parent_directory = File.expand_path('..', ${1:Dir.pwd})
+
+#}}}
+
+# my snippets# {{{
+snippet auto_name
+abbr    Get autoload function name
+options word
+  `join(map(split(substitute(expand("%:p"), '.*/lib/\(.*\).rb$', '\1', 'g'), '/'), 'ToUpperCamel(v:val)'), '::')`
+
+snippet load_path
+options word
+  lib = File.expand_path(File.dirname(__FILE__) + '/../lib')
+  begin
+    require '${1}'
+  rescue LoadError
+    $LOAD_PATH << lib
+    require '$1'
+  end
+
+snippet ++
+abbr    += 1
+options word
+alias   '.*\s\+'
+  ${1}+= 1
+
+snippet --
+abbr    -= 1
+options word
+alias   '.*\s\+'
+  ${1}-= 1
+
+snippet atcoder
+abbr    class Question ...
+options word
+  require 'singleton'
+
+  class Question
+    include Singleton
+    include Enumerable
+
+    attr_accessor :answer, :question
+
+    def initialize
+      @statement = [
+        {
+          q: [
+            ${1}
+          ],
+          a: '${2}',
+        }
+      ]
+    end
+
+    def each(&block)
+      until @statement.empty?
+        build_question
+        self.instance_exec(@answer, &block)
+      end
+    end
+
+    def gets
+      build_question unless @question && @answer
+      @question.shift
+    end
+
+    def build_question
+      @question, @answer = @statement.shift.values_at(:q, :a)
+    end
+
+    module STDIN
+      def self.gets
+        Question.instance.gets
+      end
+    end
+    $stdin = STDIN
+  end
+
+  class Solver
+    def initialize
+      ${3}
+    end
+
+    def solve
+      gets
+    end
+  end
+
+  if Object.const_defined?(:Question)
+    Question.instance.each do |expected|
+      puts Solver.new.solve == expected
+    end
+  else
+    puts Solver.new.solve
+  end
+# }}}
+
+snippet gemspec
+abbr    gemspec_config
+options word
+  $:.unshift File.expand_path('../lib', __FILE__)
+  require '${1}/version'
+
+  Gem::Specification.new do |s|
+    s.authors               = '`g:my.info.name`'
+    s.date                  = Time.now.strftime('%Y-%m-%d')
+    s.email                 = '`g:my.info.email`'
+    s.files                 = `git ls-files`.split("\n")
+    s.homepage              = '${2}'
+    s.license               = 'MIT'
+    s.name                  = '$1'
+    s.require_paths         = %w!lib!
+    s.required_ruby_version = '>= 2.0.0'
+    s.test_files            = `git ls-files -- {spec}/*`.split("\n")
+    s.version               = ${3}::VERSION
+
+    s.summary               = '${4}'
+    s.description           = '$4'
+
+    s.add_development_dependency 'rake'
+    s.add_development_dependency 'rspec'
+    # s.executables = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
+  end

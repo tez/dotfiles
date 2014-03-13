@@ -1,0 +1,9 @@
+snippet source
+abbr    source
+options word
+  source ${1:'http://api.berkshelf.com'}
+
+snippet cookbook
+abbr    cookbook 'name'
+options word
+  cookbook '${1:#:name}'${2:, '~> ${3:version\}'}

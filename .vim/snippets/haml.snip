@@ -1,0 +1,77 @@
+include ruby.snip
+
+# header#{{{
+snippet     style
+    %link{ :type => "text/css", :rel => "stylesheet", :href => "${1}" }
+
+snippet    charset
+    %meta{ 'http-equiv' => "Content-Type", :content => "text/html;charset=UTF-8" }
+
+snippet     author
+    %meta{ 'name' => 'author', :content => '${1}' }
+
+snippet script
+    %script{ :type => "text/javascript", :src => "${1}" }
+
+snippet template
+    %script{ type: 'text/template', data: { path: '${1}' } }
+      ${2}
+
+snippet     img
+    %img{ :src => "${1}", :alt => "${2}" }/
+
+snippet     jq18
+    javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/1.8.0/jquery.min.js"
+
+snippet     html5
+    javascript_include_tag "http://html5shim.googlecode.com/svn/trunk/html5.js"
+
+snippet     mail
+    %a { href: "mailto:${1}" }${2}
+
+snippet description
+    %meta{ name: "description", content: "${1}" }
+
+snippet keywords
+    %meta{ name: "keywords", content: "${1}" }
+#}}}
+
+# js #{{{
+snippet     onchange
+abbr        onchange: "..."
+options     word
+  onchange: "${2:javascript}"
+#}}}
+
+# enctype
+snippet     enctype
+abbr        enctype: "multipart/form-data"
+options     word
+  enctype: "multipart/form-data"
+
+# for IE
+snippet     css3
+abbr        %script{ src: "http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js" }
+options     word
+  /[if lt IE 9]
+    %script{ src: "http://css3-mediaqueries-js.googlecode.com/svn/trunk/css3-mediaqueries.js" }
+
+snippet     ie8
+abbr        %script{ src: "http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js" }
+options     word
+  /[if lt IE 8]
+    %script{ src: "http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE8.js" }
+
+snippet     ie7
+abbr        %script{ src: "http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE7.js" }
+options     word
+  /[if lt IE 7]
+    %script{ src: "http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE7.js" }
+
+snippet     ie9
+abbr        %script{ src: "http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js" }
+options     word
+  /[if lt IE 9]
+    %script{ src: "http://ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js" }
+
+

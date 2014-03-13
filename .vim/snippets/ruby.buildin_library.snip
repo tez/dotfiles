@@ -1,0 +1,1936 @@
+# BasicObject {{{
+snippet method_missing
+abbr    method_missing
+regexp  'def [method_missing]*$'
+options word
+  method_missing(action, *args)
+    if action.to_s =~ ${1:regexp}
+      ${2}
+    end
+  end
+  # you should define :respond_to_missing?
+
+snippet instance_eval
+abbr    instance_eval(expr, filename = "(eval)", lineno = 1)
+options word
+  instance_eval ${1:block_or_expr}
+
+snippet singleton_method_added
+abbr    singleton_method_added
+regexp  'def [singleton_method_added]*$'
+options word
+  singleton_method_added(name)
+    ${1}
+  end
+
+snippet singleton_method_removed
+abbr    singleton_method_removed(name)
+regexp  'def [singleton_method_removed]*$'
+options word
+  singleton_method_removed(name)
+    ${2}
+  end
+
+snippet singleton_method_undefined
+abbr    singleton_method_undefined(name)
+regexp  'def [singleton_method_undefined]*$'
+options word
+  singleton_method_undefined(name)
+    ${2}
+  end
+# }}}
+
+# Object {{{
+snippet instance_of?
+abbr    instance_of?(Klass)
+regexp  '\.[instance_of?]*$'
+options word
+  instance_of?(${1:Klass})
+
+snippet instance_variable_get
+abbr    instance_variable_get(var)
+regexp  '\.[instance_variable_get]*$'
+options word
+  instance_variable_get(:@${1:name})
+
+snippet instance_variable_set
+abbr    instance_variable_set(name, value)
+regexp  '\.[instance_variable_set]*$'
+options word
+  instance_variable_set(:@${1:name}, ${2:value})
+
+snippet class_variable_set
+abbr    class_variable_set(name, value)
+regexp  '\.[class_variable_set]*$'
+options word
+  class_variable_set(:@@${1:name}, ${2:value})
+
+snippet class_variable_get
+abbr    class_variable_get(name)
+regexp  '\.[class_variable_get]*$'
+options word
+  class_variable_get(:@@${1:name})
+
+snippet class_variable_defined?
+abbr    class_variable_defined?(:@@name)
+options word
+  class_variable_defined?(:@@${1:name})
+
+snippet instance_variables
+abbr    instance_variables
+regexp  '\.[instance_variables]*$'
+options word
+  instance_variables
+
+snippet frozen?
+abbr    frozen?
+regexp  '\.[frozen?]*$'
+options word
+  frozen?
+
+snippet instance_variable_defined?
+abbr    instance_variable_defined?(var)
+regexp  '\.[instance_variable_defined?]*$'
+options word
+  instance_variable_defined?(:@${1:name})
+
+snippet is_a?
+abbr    is_a?
+regexp  '\.[is_a?]*$'
+options word
+  is_a?(${1:Module})
+
+snippet method
+abbr    method(name)
+regexp  '\.[method]*$'
+options word
+  method(:${1:name})
+
+snippet methods
+abbr    methods(include_inherited = true)
+regexp  '\.[methods]*$'
+options word
+  methods${1:#:(false)}
+
+snippet private_methods
+abbr    private_methods(include_inherited = true)
+regexp  '\.[private_methods]*$'
+options word
+  private_methods${1:#:(false)}
+
+snippet protected_methods
+abbr    protected_methods(include_inherited = true)
+regexp  '\.[protected_methods]*$'
+options word
+  protected_methods${1:#:(false)}
+
+snippet public_methods
+abbr    public_methods(include_inherited = true)
+regexp  '\.[public_methods]*$'
+options word
+  public_methods${1:#:(false)}
+
+snippet public_method
+abbr    public_method(name)
+regexp  '\.[public_method]*$'
+options word
+  public_method(:${1:name})
+
+snippet public_send
+abbr    public_send(name, *args)
+regexp  '\.[public_send]*$'
+options word
+  public_send(:${1:name}${2:, ${3:*args\}})
+
+snippet remove_instance_variable
+abbr    remove_instance_variable(name)
+regexp  '\.[remove_instance_variable]*$'
+options word
+  remove_instance_variable(:${1:name})
+
+snippet respond_to?
+abbr    respond_to?(name, include_all = false)
+regexp  '\.[respond_to?]*$'
+options word
+  respond_to?(:${1:name})
+
+snippet singleton_class
+abbr    singleton_class
+regexp  '\.[singleton_class]*$'
+options word
+  singleton_class
+
+snippet singleton_methods
+abbr    singleton_methods(inherited_too = true)
+regexp  '\.[singleton_methods]*$'
+options word
+  singleton_methods${1:#:(false)}
+
+snippet taint
+abbr    taint
+regexp  '\.[taint]*$'
+options word
+  taint
+
+snippet tainted?
+abbr    tainted?
+regexp  '\.[tainted?]*$'
+options word
+  tainted?
+
+snippet tap
+abbr    tap { |x| ... }
+regexp  '\.[tap]*$'
+options word
+  tap { |${1}| ${2} }
+
+snippet tapd
+abbr    tap do |x| ... end
+regexp  '\.[[:alnum:]_?]*$'
+options word
+  tap do |${1}|
+    ${2}
+  end
+
+snippet trust
+abbr    trust
+regexp  '\.[trust]*$'
+options word
+  trust
+
+snippet untaint
+abbr    untaint
+regexp  '\.[untaint]*$'
+options word
+  untaint
+
+snippet untrust
+abbr    untrust
+regexp  '\.[untrust]*$'
+options word
+  untrust
+
+snippet untrusted?
+abbr    untrusted?
+options word
+  untrusted?
+
+snippet respond_to_missing?
+abbr    respond_to_missing?(name, include_private = false)
+options word
+  def respond_to_missing?(method_name, include_private = false)
+    method_name.to_s.start_with?('${1:user_}') || super
+  end
+# }}}
+
+# Array {{{
+snippet Array[]
+abbr    Array[*items]
+regexp  'Array'
+options word
+  Array[${1:*items}]
+
+snippet Array.new
+abbr    Array.new(size = 0, val = nil)
+regexp  'Array.new$'
+options word
+  Array.new(${1:size = 0}, ${2:val = nil})
+
+snippet Array.newdo
+abbr    Array.new(size) { |idx| ... }
+regexp  'Array'
+options word
+  Array.new(${1:size}) { |idx| ${2} }
+
+snippet assoc
+abbr    assoc(key)
+regexp  '\.[assoc]*$'
+options word
+  assoc(${1:val})
+
+snippet bsearch
+abbr    bsearch { |x| ... }
+regexp  '\.[bsearch]*$'
+options word
+  bsearch { |x| ${1} }
+
+snippet clear
+abbr    clear
+regexp  '\.[clear]*$'
+options word
+  clear
+
+snippet clone
+abbr    clone
+regexp  '\.[clone]*$'
+options word
+  clone
+
+snippet dup
+abbr    dup
+regexp  '\.[dup]*$'
+options word
+  dup
+
+snippet compact
+abbr    compact
+regexp  '\.[compact]*$'
+options word
+  compact
+
+snippet compact!
+abbr    compact!
+regexp  '\.[compact!]*$'
+options word
+  compact!
+
+snippet concat
+abbr    concat(other)
+regexp  '\.[concat]*$'
+options word
+  concat(${1:other})
+
+snippet delete
+abbr    delete(val)
+regexp  '\.[delete]*$'
+options word
+  delete(${1:val})
+
+snippet deletedo
+abbr    delete(val) { ... }
+regexp  '\.[delete]*$'
+options word
+  delete(${1:val}) { ${2} }
+
+snippet delete_at
+abbr    delete_at(pos)
+regexp  '\.[delete_at]*$'
+options word
+  delete_at(${1:pos})
+
+snippet empty?
+abbr    empty?
+regexp  '\.[empty?]*$'
+options word
+  empty?
+
+snippet fetch
+abbr    fetch(nth, ifnone)
+regexp  '\.[fetch]*$'
+options word
+  fetch(${1:nth})
+
+snippet fetchdo
+abbr    fetch(nth, ifnone) { |nth| ... }
+regexp  '\.[fetch]*$'
+options word
+  fetch(${1:nth}) { |nth| ${2} }
+
+snippet fill
+abbr    fill(val)
+regexp  '\.[fill]*$'
+options word
+  fill(${1:val})
+
+snippet filldo
+abbr    fill { |idx| ... }
+regexp  '\.[filldo]*$'
+options word
+  fill { |idx| ${1} }
+
+snippet fillrange
+abbr    fill(val, start, length)
+regexp  '\.[fillrange]*$'
+options word
+  fill(${1:val}, ${2:range or start, length})
+
+snippet fillrangedo
+abbr    fill(range) { |idx| ... }
+regexp  '\.[fillrange]*$'
+options word
+  fill(${1:range}) { |idx| ${2} }
+
+snippet flatten
+abbr    flatten(lv)
+regexp  '\.[flatten]*$'
+options word
+  flatten
+
+snippet flatten!
+abbr    flatten!
+regexp  '\.[flatten!]*$'
+options word
+  flatten!
+
+snippet insert
+abbr    insert(nth, *val)
+regexp  '\.[insert]*$'
+options word
+  insert(${1:nth}, *${2:values})
+
+snippet join
+abbr    join(sep = $,)
+regexp  '\.[join]*$'
+options word
+  join(${1:sep})
+
+snippet last
+abbr    last(n)
+regexp  '\.[last]*$'
+options word
+  last(${1:n})
+
+snippet permutation
+abbr    permutation(n = self.length)
+regexp  '\.[permutation]*$'
+options word
+  permutation(${1:n})
+
+snippet permutationdo
+abbr    permutation(n = self.length)
+regexp  '\.[permutationdo]*$'
+options word
+  permutation(${1:n}) { |p| ${2} }
+
+snippet pop
+abbr    pop(n)
+regexp  '\.[pop]*$'
+options word
+  pop(${1:n})
+
+snippet product
+abbr    product(*lists)
+regexp  '\.[product]*$'
+options word
+  product(${1:*lists})
+
+snippet push
+abbr    push
+regexp  '\.[push]*$'
+options word
+  push(${1:*objects})
+
+snippet rassoc
+abbr    rassoc(obj)
+regexp  '\.[rassoc]*$'
+options word
+  rassoc(${1:obj})
+
+snippet repeated_combination
+abbr    repeated_combination(n)
+regexp  '\.[repeated_combination]*$'
+options word
+  repeated_combination(${1:n}) ${2: { |c| ${3\} \}}
+
+snippet repeated_permutation
+abbr    repeated_permutation(n)
+regexp  '\.[repeated_permutation]*$'
+options word
+  repeated_permutation(${1:n}) ${2: { |c| ${3\} \}}
+
+snippet replace
+abbr    replace(another)
+regexp  '\.[replace]*$'
+options word
+  replace(${1:another})
+
+snippet reverse
+abbr    reverse
+regexp  '\.[reverse]*$'
+options word
+  reverse
+
+snippet reverse!
+abbr    reverse!
+regexp  '\.[reverse!]*$'
+options word
+  reverse!
+
+snippet reverse_each
+abbr    reverse_each { |item| ... }
+regexp  '\.[reverse_each]*$'
+options word
+  reverse_each { |item| ${2} }
+
+snippet rindex
+abbr    rindex(val)
+regexp  '\.[rindex]*$'
+options word
+  rindex(${1:val})
+
+snippet rindexdo
+abbr    rindex { |item| ... }
+regexp  '\.[rindexdo]*$'
+options word
+  rindex { |item| ${1} }
+
+snippet rotate
+abbr    rotate(index = 1)
+regexp  '\.[rotate]*$'
+options word
+  rotate(${1:new_head_index})
+
+snippet rotate!
+abbr    rotate!(index = 1)
+regexp  '\.[rotate!]*$'
+options word
+  rotate!(${1:new_head_index})
+
+snippet sample
+abbr    sample(n)
+regexp  '\.[sample]*$'
+options word
+  sample${1:(${2:n\})}
+
+snippet shift
+abbr    shift(n)
+regexp  '\.[shift]*$'
+options word
+  shift${1:(n)}
+
+snippet shuffle
+abbr    shuffle
+regexp  '\.[shuffle]*$'
+options word
+  shuffle
+
+snippet shuffle!
+abbr    shuffle!
+regexp  '\.[shuffle!]*$'
+options word
+  shuffle!
+
+snippet slice
+abbr    slice(pos_or_range, len = nil)
+regexp  '\.[slice]*$'
+options word
+  slice(${1:range or start}${2:, ${3:len\}\})
+
+snippet slice!range
+abbr    slice!(pos_or_range, len = nil)
+regexp  '\.[slice!]*$'
+options word
+  slice!(${1:range or start}${2:, ${3:len\}\})
+
+snippet slice!
+abbr    slice!(n)
+regexp  '\.[slice!]*$'
+options word
+  slice!(${1:n})
+
+snippet transpose
+abbr    transpose
+regexp  '\.[transpose]*$'
+options word
+  transpose
+
+snippet uniq
+abbr    uniq
+regexp  '\.[uniq]*$'
+options word
+  uniq
+
+snippet uniq!
+abbr    uniq!
+regexp  '\.[uniq!]*$'
+options word
+  uniq!
+
+snippet uniqdo
+abbr    uniq { |item| ... }
+regexp  '\.[uniqdo]*$'
+options word
+  uniq { |item| ${1} }
+
+snippet uniq!do
+abbr    uniq! { |item| ... }
+regexp  '\.[uniq!do]*$'
+options word
+  uniq! { |item| ${1} }
+
+snippet unshift
+abbr    unshift(*obj)
+regexp  '\.[unshift]*$'
+options word
+  unshift(${1:*objects})
+
+snippet values_at
+abbr    values_at(*selectors)
+regexp  '\.[values_at]*$'
+options word
+  values_at(${1:range_or_*indexes})
+
+# snippet zip
+# abbr    zip(*lists)
+# regexp  '\.[zip]*$'
+# options word
+#   zip(${1:*lists})
+
+# snippet zipdo
+# abbr    zip(*lists) { |v1, v2..| ... }
+# regexp  '\.[zipdo]*$'
+# options word
+#   zip(${1:*lists}) do |${2:v1, ...}|
+#     ${2}
+#   end
+# }}}
+
+# Dir{{{
+# Class Methods {{{
+snippet glob
+abbr    Dir.glob(pattern, flags = 0)
+regexp  'Dir\.[glob]*$'
+options word
+  glob(${1:pattern}${2:, File::FNM_${3\}})
+
+snippet chdir
+abbr    Dir.chdir(path)
+regexp  'Dir\.[chdir]*$'
+options word
+  chdir(${1:path})
+
+snippet chdirdo
+abbr    Dir.chdir(path) { |path| ... }
+regexp  'Dir\.[chdirdo]*$'
+options word
+  chdir(${1:path}) do |path|
+    ${2}
+  end
+
+snippet chroot
+abbr    Dir.chroot(path)
+regexp  'Dir\.[chroot]*$'
+options word
+  chroot
+
+snippet Dir.delete
+abbr    Dir.delete(path)
+regexp  'Dir\.[delete]*$'
+options word
+  Dir.delete(${1:path})
+
+snippet rmdir
+abbr    Dir.rmdir(path)
+regexp  'Dir\.[rmdir]*$'
+options word
+  rmdir(${1:path})
+
+snippet unlink
+abbr    Dir.unlink(path)
+regexp  'Dir\.[unlink]*$'
+options word
+  unlink(${1:path})
+
+snippet entries
+abbr    Dir.entries(path)
+regexp  'Dir\.[entries]*$'
+options word
+  entries(${1:path})
+
+snippet Dir.exists?
+abbr    Dir.exists?(dir_name)
+regexp  'Dir\.[exists?]*$'
+alias   Dir.exist?
+options word
+  Dir.exists?(${1:dir_name})
+
+snippet foreach
+abbr    Dir.foreach(path)
+regexp  'Dir\.[foreach]*$'
+options word
+  foreach(${1:path}) do |f|
+    ${1}
+  end
+
+snippet pwd
+abbr    Dir.pwd
+regexp  'Dir\.[getwdpwd]*$'
+alias   getwd
+options word
+  pwd
+
+snippet home
+abbr    Dir.home(user = nil)
+regexp  'Dir\.[home]*$'
+options word
+  home${1:(${2:user\})}
+
+snippet mkdir
+abbr    Dir.mkdir(path, mode = 0777)
+regexp  'Dir\.[mkdir]*$'
+options word
+  mkdir(${1:path}, ${2:0777})
+
+snippet Dir.open
+abbr    Dir.open(path)
+regexp  'Dir\.[newopen]*$'
+alias   Dir.new
+options word
+  Dir.open(${1:path}, ${2:0777})
+
+snippet newdo
+abbr    Dir.open(path) { |dir| ... }
+regexp  'Dir\.[newopendo]*$'
+alias   opendo
+options word
+  open(${1:path}, ${2:0777}) do |dir|
+    ${3}
+  end
+# }}}
+
+# Instance Methods {{{
+snippet pos
+abbr    dir.pos
+regexp  'dir\.[pos]*$'
+alias   tell
+options word
+  pos
+
+snippet seek
+abbr    dir.seek(pos)
+regexp  'dir\.[seek]*$'
+options word
+  seek(${1:pos})
+
+snippet read
+abbr    dir.read(pos)
+regexp  'dir\.[read]*$'
+options word
+  read(${1:pos})
+
+snippet close
+abbr    dir.close
+regexp  'dir\.[close]*$'
+options word
+  close
+
+snippet rewind
+abbr    dir.rewind
+regexp  'dir\.[rewind]*$'
+options word
+  rewind
+# }}}
+# }}}
+
+# Enumerable {{{
+snippet all?
+abbr    all? { |v| ... } #=> bool
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  all? { |${1:v}| ${2} }
+
+snippet any?
+abbr    any? { |v| ... } #=> bool
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  any? { |${1:v}| ${2} }
+
+snippet chunk
+abbr    chunk { |v| ... } #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  chunk { |${1:v}| ${2} }
+
+snippet map
+abbr    map { |v| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  map { |${1:v}| ${2} }
+
+snippet mapd
+abbr    map do |v| ... end #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  map do |${1:v}|
+    ${2}
+  end
+
+snippet collect
+abbr    collect { |v| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  collect { |${1:v}| ${2} }
+
+snippet collectd
+abbr    collect do |v| ... end #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  collect do |${1:v}|
+    ${2}
+  end
+
+snippet combination
+abbr    combination(n)
+regexp  '\.[combination]*$'
+options word
+  combination(${1:size})
+
+snippet combinationd
+abbr    combination(n) { |c| ... }
+regexp  '\.[combinationd]*$'
+options word
+  combination(${1:size}) do |${2:values}|
+    ${3}
+  end
+
+snippet collect_concat
+abbr    collect_concat { |v| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  collect_concat { |${1:v}| ${2} }
+
+snippet flat_map
+abbr    flat_map { |v| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  flat_map { |${1:v}| ${2} }
+
+snippet countd
+abbr    count { |v| ... } #=> int
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  count { |${1:v}| ${2} }
+
+snippet count
+abbr    count(v) #=> int
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  count(${1})
+
+snippet cycle
+abbr    cycle { |v| ... } #=> nil
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  cycle { |${1:v}| ${2} }
+
+snippet cycled
+abbr    cycle(v) #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  cycle(${1:count})
+
+snippet detect
+abbr    detect { |v| ... } #=> obj or nil
+options word
+alias   find
+regexp  '\.[[:alnum:]_?]*$'
+  detect { |${1:v}| ${2} }
+
+snippet drop
+abbr    drop(index) #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  drop(${1:index})
+
+snippet drop_while
+abbr    drop_while { |v| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  drop_while { |${1:v}| ${2} }
+
+snippet each_cons
+abbr    each_cons { |v| ... } #=> nil
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_cons(${1:count}) { |${2:v}| ${3} }
+
+snippet each_consd
+abbr    each_cons do |v| ... end #=> nil
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_cons(${1:count}) do |${2:v}|
+    ${3}
+  end
+
+snippet each_entry
+abbr    each_entry { |v| ... } #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_entry { |${1:v}| ${2} }
+
+snippet each_entryd
+abbr    each_entry do |v| ... end #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_entry do |${1:v}|
+    ${2}
+  end
+
+snippet each_slice
+abbr    each_slice(n) { |v| ... } #=> nil
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_slice(${1:count}) { |${2:v}| ${3} }
+
+snippet each_sliced
+abbr    each_slice(n) do |v| ... end #=> nil
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_slice(${1:count}) do |${2:v}|
+    ${3}
+  end
+
+snippet each_with_index
+abbr    each_with_index { |v| ... } #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_with_index { |${1}, index| ${2} }
+
+snippet each_with_indexd
+abbr    each_with_index do |v| ... end #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_with_index do |${1}, index|
+    ${2}
+  end
+
+snippet each_index
+abbr    each_index { |i| ... } #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_index { |i| ${1} }
+
+snippet each_indexd
+abbr    each_index do |i| ... end #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_index do |i|
+    ${1}
+  end
+
+snippet with_index
+abbr    with_index { |v| ... } #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  with_index { |${1}, index| ${2} }
+
+snippet with_indexd
+abbr    with_index do |v| ... end #=> enum
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  with_index do |${1}, index|
+    ${2}
+  end
+
+snippet each_with_object
+abbr    each_with_object { |v| ... } #=> obj
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_with_object(${1}) { |${2:v}, memo| ${3} }
+
+snippet each_with_objectd
+abbr    each_with_object(obj) do |v| ... end #=> obj
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  each_with_object(${1}) do |${2:v}, memo|
+    ${3}
+  end
+
+snippet select
+abbr    select { |v| ... } #=> array
+options word
+alias   find_all
+regexp  '\.[[:alnum:]_?]*$'
+  select { |${1:v}| ${2} }
+
+snippet find_indexd
+abbr    find_index(n) { |v| ... } #=> int or nil
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  find_index(${1:value}) { |${2:v}| ${3} }
+
+snippet first
+abbr    first(n) #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  first(${1:n})
+
+snippet grep
+abbr    grep(pat) { |v| ... }
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  grep(${1:pat}) ${2:{ |v| ${3\} \}}
+
+snippet group_by
+abbr    group_by { |v| ... } #=> hash
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  group_by { |${1:v}| ${2} }
+
+snippet include?
+abbr    include?(obj) #=> bool
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  include?(${1})
+
+snippet injectd
+abbr    inject(init) { |memo, v| ... } #=> obj
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  inject(${1:init}) { |memo, ${1:v}| ${2} }
+
+snippet inject
+abbr    inject(:sym) #=> obj
+alias   reduce
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  inject(&:${1:+})
+
+snippet map!
+abbr    map! { |v| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_!?]*$'
+  map! { |${1:v}| ${2} }
+
+snippet max
+abbr    max { |a, b| ... }
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  max { |a, b| ${2} <=> $2${3} }
+
+snippet member?
+abbr    member?(obj)
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  member?(${1:obj})
+
+snippet min
+abbr    min { |a, b| ... }
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  min { |a, b| ${2} <=> $2${3} }
+
+snippet min_by
+abbr    min_by { |v| ... }
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  min_by { |${1:v}| ${2} }
+
+snippet minmax
+abbr    minmax { |a, b| ... } #=> [min, max]
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  minmax { |a, b| ${2} }
+
+snippet minmax_by
+abbr    minmax_by { |v| ... } #=> [min, max]
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  minmax_by { |${1:v}| ${2} }
+
+snippet none?
+abbr    none? #=> bool
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  none?
+
+snippet one?
+abbr    one? #=> bool
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  one?
+
+snippet one?d
+abbr    one? { |v| ... } #=> bool
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  one? { |${1:v}| ${2} }
+
+snippet partition
+abbr    partition { |v| ... } #=> [true_a, false_a]
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  partition { |${1:v}| ${2:condition} }
+
+#snippet slice_before
+#abbr    slice_before { |v| ... } #=> enum
+#options word
+#regexp  '\.[[:alnum:]_?]*$'
+#  slice_before { |${1:v}| ${2} }
+
+snippet sort
+abbr    sort { |v| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  sort { |a, b| ${1} <=> $1${2} }
+
+snippet sort_by
+abbr    sort_by { |v| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  sort_by { |${1}| ${2} }
+
+snippet take
+abbr    take(n)
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  take(${1:n})
+
+snippet take_while
+abbr    take_while { |arr| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  take_while { |${1}| ${2} }
+
+snippet zip
+abbr    zip(*args) #=> array_of_array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  zip(${1:*args})
+
+snippet each
+abbr    each { ... }
+regexp  '\.[[:alnum:]_?]*$'
+options word
+  each { |${2:v}| ${1} }
+
+snippet eachd
+abbr    each { ... }
+regexp  '\.[[:alnum:]_?]*$'
+options word
+  each do |${1}|
+    ${2}
+  end
+
+
+
+snippet reject
+abbr    reject { |v| ... } #=> array
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  reject { |${1:v}| ${2} }
+
+snippet reject!
+abbr    reject! { |v| ... }
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  reject! { |${1:v}| ${2} }
+# }}}
+
+# Enumerable::Lazy {{{
+# TODO
+# }}}
+
+# Float {{{
+snippet ceil
+abbr    ceil
+regexp  '\.[ceil]*$'
+options word
+  ceil
+
+snippet floor
+abbr    floor
+regexp  '\.[floor]*$'
+options word
+  floor
+
+snippet nan?
+abbr    nan?
+regexp  '\.[nan?]*$'
+options word
+  nan?
+
+snippet rationalize
+abbr    rationalize
+regexp  '\.[rationalize]*$'
+options word
+  rationalize
+
+snippet round
+abbr    round(ndigits = 0)
+regexp  '\.[round]*$'
+options word
+  round${1:(${2:ndigits\})}
+
+snippet truncate
+abbr    truncate
+regexp  '\.[truncate]*$'
+options word
+  truncate
+# }}}
+
+# Fiber{{{
+snippet Fiber.new
+abbr    Fiber.new(&block)
+regexp  'Fiber\.[new]*$'
+options word
+  Fiber.new do
+    ${1:Fiber.yield}
+  end
+
+snippet yield
+abbr    Fiber.yield(*args = nil)
+regexp  'Fiber\.[yield]*$'
+options word
+  yield(${1:*args})
+
+snippet resume
+abbr    fiber.resume(*args = nil)
+regexp  'fiber\.[resume]*$'
+options word
+  resume(${1:*args})
+
+snippet transfer
+abbr    fiber.transfer(*args = nil)
+regexp  'fiber\.[transfer]*$'
+options word
+  # require 'fiber'
+  transfer(${1:*args})
+# }}}
+
+# File {{{
+snippet absolute_path
+abbr    File.absolute_path(file_name, dir_string=nil)
+regexp  'File\.[absolute_path]*$'
+options word
+  absolute_path(${1:file_name}, ${2:dir_string = nil})
+
+snippet atime
+abbr    File.atime(file_name)
+regexp  'File\.[atime]*$'
+options word
+  atime(${1:file_name})
+
+snippet basename
+abbr    File.basename(file_name, suffix='')
+regexp  'File\.[basename]*$'
+options word
+  basename(${1:file_name}${2:, ${3:suffix\}})
+
+snippet blockdev?
+abbr    File.blockdev?(path)
+regexp  'File\.[blockdev?]*$'
+options word
+  blockdev?(${1:path})
+
+snippet chardev?
+abbr    File.chardev?(path)
+regexp  'File\.[chardev?]*$'
+options word
+  chardev?(${1:path})
+
+snippet chmod
+abbr    File.chmod(mode, *filename)
+regexp  'File\.[chmod]*$'
+options word
+  chmod(${1:0777}, ${2:*filename})
+
+snippet chown
+abbr    File.chown(owner, group *filename)
+regexp  'File\.[chown]*$'
+options word
+  chown(${1:owner}, ${2:group}, ${3:*filename})
+
+snippet ctime
+abbr    File.ctime(file_name)
+regexp  'File\.[ctime]*$'
+options word
+  ctime(${1:file_name})
+
+snippet File.delete
+abbr    File.delete(*file_name)
+regexp  'File\.[delete]*$'
+alias   File.unlink
+options word
+  File.delete(${1:*file_name})
+
+snippet directory?
+abbr    File.directory?(path)
+regexp  'File\.[directory?]*$'
+options word
+  directory?(${1:path})
+
+snippet File.dirname
+abbr    File.dirname(file_name)
+regexp  'File\.[dirname]*$'
+options word
+  File.dirname(${1:file_name})
+
+snippet executable?
+abbr    File.executable?(file_name)
+regexp  'File\.[executable?]*$'
+options word
+  executable?(${1:file_name})
+
+snippet executable_real?
+abbr    File.executable_real?(file_name)
+regexp  'File\.[executable_real?]*$'
+options word
+  executable_real?(${1:file_name})
+
+snippet File.exists?
+abbr    File.exists?(file_name)
+regexp  'File\.[exists?]*$'
+alias   File.exist?
+options word
+  File.exists?(${1:file_name})
+
+snippet expand_path
+abbr    File.expand_path(path, default_dir = '.')
+regexp  'File\.[expand_path]*$'
+options word
+  expand_path(${1:path}${2:, ${3:default_dir='.'\}})
+
+snippet extname
+abbr    File.extname(file_name)
+regexp  'File\.[extname]*$'
+options word
+  File.extname(${1:file_name})
+
+snippet file?
+abbr    File.file?(file_name)
+regexp  'File\.[file?]*$'
+options word
+  file?(${1:file_name})
+
+snippet fnmatch?
+abbr    File.fnmatch?(pattern, path, flags = 0)
+regexp  'File\.[fnmatch?]*$'
+options word
+  fnmatch?(${1:pattern}, ${2:path}${3:, File::FNM_${4\}})
+
+snippet ftype
+abbr    File.ftype(file_name)
+regexp  'File\.[ftype]*$'
+options word
+  ftype(${1:file_name})
+
+snippet grpowned?
+abbr    File.grpowned?(path)
+regexp  'File\.[grpowned?]*$'
+options word
+  grpowned?(${1:path})
+
+snippet identical?
+abbr    File.identical?(file_name)
+regexp  'File\.[identical?]*$'
+options word
+  identical?(${1:file_name})
+
+snippet File.join
+abbr    File.join(*item)
+regexp  'File\.[join]*$'
+options word
+  File.join(${1:*item})
+
+snippet lchown
+abbr    File.lchown(owner, group *filename)
+regexp  'File\.[lchown]*$'
+options word
+  lchown(${1:owner}, ${2:group}, ${3:*filename})
+
+snippet link
+abbr    File.link(old, new)
+regexp  'File\.[link]*$'
+options word
+  link(${1:old}, ${2:new})
+
+snippet mtime
+abbr    File.mtime(file_name)
+regexp  'File\.[mtime]*$'
+options word
+  mtime(${1:file_name})
+
+snippet File.open
+abbr    File.open(path, mode = 'r', permission = 0666)
+regexp  'File\.[newopen]*$'
+alias   File.new
+options word
+  File.open(${1:file_name})
+
+snippet File.opendo
+abbr    File.open(path, mode = 'r', permission = 0666) { |f| ... }
+regexp  'File\.[newopendo]*$'
+alias   File.newdo
+options word
+  File.open(${1:file_name}) do |f|
+    ${2}
+  end
+
+snippet owned?
+abbr    File.owned?(file_name)
+regexp  'File\.[owned?]*$'
+options word
+  owned?(${1:file_name})
+
+snippet File.path
+abbr    File.path(file_name)
+regexp  'File\.[path]*$'
+options word
+  File.path(${1:file_name})
+
+snippet pipe?
+abbr    File.pipe?(file_name)
+regexp  'File\.[pipe?]*$'
+options word
+  pipe?(${1:file_name})
+
+snippet readable?
+abbr    File.readable?(file_name)
+regexp  'File\.[readable?]*$'
+options word
+  readable?(${1:file_name})
+
+snippet readable_real?
+abbr    File.readable_real?(file_name)
+regexp  'File\.[readable_real?]*$'
+options word
+  readable_real?(${1:file_name})
+
+snippet readlink
+abbr    File.readlink(file_name)
+regexp  'File\.[readlink]*$'
+options word
+  readlink(${1:file_name})
+
+snippet realdirpath
+abbr    File.realdirpath(pathname, basedir = nil)
+regexp  'File\.[realdirpath]*$'
+options word
+  realdirpath(${1:pathname})
+
+snippet realpath
+abbr    File.realpath(pathname, basedir = nil)
+regexp  'File\.[realpath]*$'
+options word
+  realpath(${1:file_name})
+
+snippet rename
+abbr    File.rename(from, to)
+regexp  'File\.[rename]*$'
+options word
+  rename(${1:from}, ${2:to})
+
+snippet setgid?
+abbr    File.setgid?(path)
+regexp  'File\.[setgid?]*$'
+options word
+  setgid?(${1:path})
+
+snippet setuid?
+abbr    File.setuid?(path)
+regexp  'File\.[setuid?]*$'
+options word
+  setuid?(${1:path})
+
+snippet size
+abbr    File.size(path)
+regexp  'File\.[size]*$'
+options word
+  size(${1:path})
+
+snippet socket?
+abbr    File.socket?(path)
+regexp  'File\.[socket?]*$'
+options word
+  socket?(${1:path})
+
+snippet split
+abbr    File.split(pathname)
+regexp  'File\.[splitname]*$'
+options word
+  split(${1:pathname})
+
+snippet stat
+abbr    File.stat(filename)
+regexp  'File\.[filename]*$'
+options word
+  stat(${1:filename})
+
+snippet sticky?
+abbr    File.sticky?(path)
+regexp  'File\.[sticky?]*$'
+options word
+  sticky?(${1:path})
+
+snippet symlink
+abbr    File.symlink(old, new)
+regexp  'File\.[symlink]*$'
+options word
+  symlink(${1:old}, ${2:new})
+
+snippet symlink?
+abbr    File.symlink?(path)
+regexp  'File\.[symlink?]*$'
+options word
+  symlink?(${1:path})
+
+snippet File.truncate
+abbr    File.truncate(path, length)
+regexp  'File\.[truncate]*$'
+options word
+  File.truncate(${1:path}, ${2:length})
+
+snippet umask?
+abbr    File.umask?
+regexp  'File\.[umask?]*$'
+options word
+  umask?
+
+snippet umask
+abbr    File.umask(umask)
+regexp  'File\.[umask]*$'
+options word
+  umask(${1:umask})
+
+snippet utime
+abbr    File.utime(atime, mtime, *filename)
+regexp  'File\.[utime]*$'
+options word
+  utime(${1:atime}, ${2:mtime}, ${3:*filename})
+
+snippet world_readable?
+abbr    File.world_readable?(path)
+regexp  'File\.[world_readable?]*$'
+options word
+  world_readable?(${1:path})
+
+snippet world_writable?
+abbr    File.world_writable?(path)
+regexp  'File\.[world_writable?]*$'
+options word
+  world_writable?(${1:path})
+
+snippet writable?
+abbr    File.writable?(path)
+regexp  'File\.[writable?]*$'
+options word
+  writable?(${1:path})
+
+snippet writable_real?
+abbr    File.writable_real?(path)
+regexp  'File\.[writable_real?]*$'
+options word
+  writable_real?(${1:path})
+
+snippet File.zero?
+abbr    File.zero?(path)
+regexp  'File\.[zero?]*$'
+options word
+  File.zero?(${1:path})
+
+
+
+
+# }}}
+
+# Hash {{{
+snippet Hash.new
+abbr    Hash.new { |h,k| h[k] = ... }
+regexp  'Hash\.[new]*$'
+options word
+  Hash.new { |h,k| h[k] = ${1} }
+
+snippet Hash0
+abbr    Hash.new(0)
+regexp  'Hash0\?$'
+options word
+  Hash.new(0)
+
+snippet Hash[]
+abbr    Hash.new { |h,k| h[k] = [] }
+options word
+regexp  'Hash\[\?\]\?$'
+  Hash.new { |h,k| h[k] = [] }
+
+snippet     Hash{}
+abbr        Hash.new { |h,k| h[k] = Hash.new(&h.default_proc) }
+regexp  'Hash\({}\)\?$'
+  Hash.new { |h,k| h[k] = Hash.new(&h.default_proc) }
+
+snippet store
+abbr    store(key, value)
+regexp  '\.[store]*$'
+options word
+  store(${1:key}, ${2:value})
+
+snippet default
+abbr    default(default_value)
+regexp  '\.[default]*$'
+options word
+  default(${1:key})
+
+snippet has_key?
+abbr    has_key?(key)
+regexp  '\.[has_key?]*$'
+options word
+alias   key? member?
+  has_key?(${1:key})
+
+snippet has_value?
+abbr    has_value?(value)
+regexp  '\.[has_value?]*$'
+options word
+  has_value?(${1:value})
+
+snippet invert
+abbr    invert
+regexp  '\.[invert]*$'
+options word
+  invert
+
+snippet keys
+abbr    keys
+regexp  '\.[keys]*$'
+options word
+  keys
+
+snippet rehash
+abbr    rehash
+regexp  '\.[rehash]*$'
+options word
+  rehash
+# }}}
+
+# Integer {{{
+snippet chr
+abbr    chr(encoding = Encoding::UTF_8)
+  chr ${1:#:Encoding::UTF_8}
+
+snippet denominator
+abbr    denominator
+alias   numerator
+options word
+  denominator
+
+snippet downto
+abbr    downto(min)
+options word
+regexp  '\.[[:alnum:]_?]*$'
+  downto(min) do |${1:i}|
+    ${2}
+  end
+
+snippet even?
+abbr    even?
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  even?
+
+snippet gcd
+abbr    gcd(n)
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  gcd(${1:n})
+
+snippet gcdlcm
+abbr    gcdlcm(n)
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  gcdlcm(${1:n})
+
+snippet integer?
+abbr    integer?
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  integer?
+
+snippet lcm
+abbr    lcm(n)
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  lcm(${1:n})
+
+#snippet next
+#abbr    next
+#regexp  '\.[[:alnum:]_?]*$'
+## regexp dot
+#alias   succ
+#options word
+#  next
+
+snippet odd?
+abbr    odd?
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  odd?
+
+snippet pred
+abbr    pred #=> self - 1
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  pred
+
+snippet times
+abbr    times { |i| ... }
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  times do |i|
+    ${1}
+  end
+
+snippet upto
+abbr    upto(max) { |i| ... }
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  upto(${1:max}) do |i|
+    ${2}
+  end
+# }}}
+
+# Numeric {{{
+snippet step
+abbr    step(limit, step = 1) { |n| ... }
+options word
+  step(${1:limit}${2:, ${3:step = 1\}}) do |i|
+    ${4}
+  end
+# }}}
+
+# Fixnum {{{
+snippet modulo
+abbr    modulo(other)
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  modulo(other)
+
+snippet div
+abbr    div(other)
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  div(${1:other})
+
+snippet abs
+abbr    abs
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  abs
+
+snippet fdiv
+abbr    fdiv(other)
+options word
+  fdiv(${1:other})
+
+snippet zero?
+abbr    zero?
+regexp  '\.[[:alnum:]_?]*$'
+# regexp dot
+options word
+  zero?
+# }}}
+
+# Rational {{{
+snippet Rational
+abbr    Rational
+options word
+  Rational(${1}, ${2})
+# }}}
+
+# Net::HTTP# {{{
+snippet Net::HTTP.get
+abbr    Net::HTTP.get(url, path)
+regexp  '\.[Net::HTTP.get]*$'
+options word
+  Net::HTTP.get(${1:url}, ${2:path})
+
+snippet Net::HTTP.get_by_uri
+abbr    Net::HTTP.get(url)
+regexp  '\.[Net::HTTP.get_by_uri]*$'
+options word
+  uri = URI(${1:http//...})
+  Net::HTTP.get(uri)
+
+snippet Net::HTTP.get_by_params
+abbr    Net::HTTP.get(url) with params
+regexp  '\.[Net::HTTP.get_by_params]*$'
+options word
+  uri = URI(${1:http//...})
+  params = {${2}}
+  uri.query = URI.encode_www_form(params)
+  res = Net::HTTP.get(uri)
+
+  if res.is_a?(Net::HTTPSuccess)
+    ${3}
+  end
+
+snippet Net::HTTP::Post.new
+abbr    Net::HTTP::Post.new
+regexp  '\.[Net::HTTP::Post.new]*$'
+options word
+  uri = URI('${1}')
+  req = Net::HTTP::Post.new(uri)
+  req.set_form_data(${2:'name' => 'value'})
+
+  res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+    http.request(req)
+  end
+
+snippet Net::HTTP.post_form
+abbr    Net::HTTP.post_form(uri, queries)
+regexp  '\.[Net::HTTP.post_form]*$'
+options word
+  uri = URI('${1}')
+  res = Net::HTTP.post_form(uri, ${2:'name' => 'value', 'multi_value' => [1, 2, 3]...})
+
+snippet Net::HTTP.start
+abbr    Net::HTTP.start(host, port) { ... }
+regexp  '\.[Net::HTTP.start]*$'
+options word
+  uri = URI('${1}')
+  Net::HTTP.start(uri.host, uri.port) do |http|
+    request = Net::HTTP::Get.new(uri)
+    res = http.request(request)
+  end
+
+snippet Net::HTTP.get_response
+abbr    Net::HTTP.get_response(uri)
+regexp  '\.[Net::HTTP.get_response]*$'
+options word
+  res = Net::HTTP.get_response(${1:uri})
+
+snippet req.basic_auth
+abbr    req.basic_auth
+regexp  'req\.[basic_auth]*$'
+options word
+  req.basic_auth '${1:user}', ${2:pass}
+
+snippet req.set_form_data
+abbr    req.set_form_data
+regexp  '\.[req.set_form_data]*$'
+options word
+  req.set_form_data(${2:'name' => 'value'})
+
+# String {{{
+snippet gsub
+abbr    gsub
+regexp  '\.[gsub]*$'
+options word
+  gsub(/${1:pat}/, '${2}')
+
+snippet unpack
+abbr    unpack(format)
+options word
+  unpack(${1:format})
+
+snippet unpack_format_sample
+abbr    http://ruby-doc.org/core-2.0/String.html#method-i-unpack
+options word
+  http://ruby-doc.org/core-2.0/String.html#method-i-unpack
+# }}}
+
+# Comparable {{{
+snippet Comparable
+abbr    include Comparable
+options word
+  include Comparable
+
+  def <=>(other)
+    ${2}
+  end
+# }}}
+
+# Marshal# {{{
+snippet Marshal.load
+abbr    Marshal.load(Marshal.dump(${1:val}))
+alias   deep_duplicate
+options word
+  Marshal.load(Marshal.dump(${1:val}))
+# }}}
+
+# Range {{{
+snippet cover?
+abbr    cover?(n)
+options word
+  cover?(${1:n})
+# }}}
+
+# Kernel{{{
+snippet sprintf
+abbr    sprintf(pat, *values)
+regexp  '[sprintf]*$'
+options word
+  sprintf('${1:pat}', ${2:*values})
+# }}}
+
+# Module {{{
+snippet class_exec
+abbr    class_exec(*args) { |*vars| ... }
+alias   module_exec
+options word
+  class_exec(${1:*args}) do |${2:*vars}|
+    ${3}
+  end
+
+snippet class_eval
+abbr    class_eval { |klass| ... }
+alias   module_eval
+options word
+  class_eval do |klass|
+    ${1}
+  end
+
+snippet class_eval_string
+abbr    class_eval <<-EOT, __FILE__, __LINE__ + 1 { ... }
+options word
+  class_eval <<-EOT, __FILE__, __LINE__ + 1
+    ${1}
+  EOT
+
+snippet instance_exec
+abbr    instance_exec(*args) { |*vars| ... }
+options word
+  instance_exec(${1:*args}) do |${2:*vars}|
+    ${3}
+  end
+## }}}
+
+# Forwardable {{{
+snippet Forwardable
+abbr    Forwardable
+options word
+  require 'forwardable'
+  extend Forwardable
+
+snippet def_delegator
+abbr    def_delegator(accessor, method, alias = method)
+options word
+  def_delegator :${1:@accessor}, :${2:method}${3:, ${4:alias\}}
+
+snippet def_delegators
+abbr    def_delegators(accessor, *methods)
+options word
+  def_delegators :${1:@accessor}, ${2:*methods}
+# }}}
+
+# Time# {{{
+snippet Time.at
+abbr    Time.at(time)
+options word
+  Time.at(${1:large_n})
+
+snippet Time.gm
+abbr    Time.gm(year, mon = 1, day = 1, hour = 0, min = 0, sec = 0, usec = 0)
+alias   Time.utc
+options word
+  Time.gm(${1:year}, ${2:mon=1}, ${3:day=1}, ${4:hour}, ${5:min}, ${6:sec}, ${7:usec})
+
+snippet Time.local
+abbr    Time.local(year, mon = 1, day = 1, hour = 0, min = 0, sec = 0, usec = 0)
+alias   Time.mktime
+options word
+  Time.local(${1:year}, ${2:mon=1}, ${3:day=1}, ${4:hour}, ${5:min}, ${6:sec}, ${7:usec})
+
+snippet Time.new
+abbr    Time.new
+alias   Time.now
+options word
+  Time.new
+
+snippet strftime
+abbr    strftime(format)
+regexp  '\.[strftime]*$'
+options word
+  strftime('%Y-%m-%m %I:%M:%S')
+# }}}

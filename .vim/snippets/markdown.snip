@@ -1,0 +1,40 @@
+include framework.snip
+
+snippet code
+abbr    ```...```
+options word
+  \`\`\`${1}
+  ${2}
+  \`\`\`
+
+snippet title
+abbr    title : ...
+options word
+  title :
+
+snippet link_id
+abbr    [link_id][]
+options word
+  [${1:text}][${1:link_id}]
+
+snippet link
+abbr    [text](http://...)
+options word
+  [${1:text}(http://${2:url})
+
+snippet link_mail
+abbr    [${1:text}](mailto:${2:`g:my.info.email`})
+options word
+  [${1:text}](mailto:${2:email})
+
+snippet link_title
+abbr    [text](url "title")
+options word
+  [${1:text}](${2:url} "${2:title}")
+
+snippet link_image
+abbr    ![alt](url)
+options word
+  ![${1:alt}](${2:url})
+
+

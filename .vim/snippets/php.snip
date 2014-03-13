@@ -1,0 +1,438 @@
+# custom function#{{{
+snippet     f_path_to_url
+  function path_to_url($path, $default_port = 80){/*{{{*/
+    //ドキュメントルートのパスとURLの作成
+    $document_root_url  = $_SERVER['SCRIPT_NAME'];
+    $document_root_path = $_SERVER['SCRIPT_FILENAME'];
+
+    while(basename($document_root_url) === basename($document_root_path)){
+      $document_root_url  = dirname($document_root_url);
+      $document_root_path = dirname($document_root_path);
+    }
+    if($document_root_path === '/') $document_root_path = '';
+    if($document_root_url  === '/') $document_root_url  = '';
+
+    $protocol = ($_SERVER['HTTPS'] && $_SERVER['HTTPS'] !== 'off')? 'https': 'http';
+    $port = ($_SERVER['SERVER_PORT'] && $_SERVER['SERVER_PORT'] != $default_port)? ':'.$_SERVER['SERVER_PORT']: '';
+    $document_root_url = $protocol.'://'.$_SERVER['SERVER_NAME'].$port.$document_root_url;
+
+    //絶対パスの取得 (realpath関数ではファイルが存在しない場合や、シンボリックリンクである場合にうまくいかない)
+    $absolute_path = realpath($path);
+    if(!$absolute_path)
+      return false;
+    if(substr($absolute_path, -1) !== '/' && substr($path, -1) === '/')
+      $absolute_path .= '/';
+
+    //パスを置換して返す
+    $url = str_replace($document_root_path, $document_root_url, $absolute_path);
+
+    if($absolute_path === $url) {
+      return false;
+    }
+
+    return $url;
+  }/*}}}*/
+
+
+snippet     f_relative_url
+abbr 2つのパスを比べて、相対パスを書き出す
+  function relative_url ( $base, $target, $option = true ) {/*{{{*/
+    // 戻り値（$url）を $option に基づいて初期化
+    $url = ($option) ? './': '';
+
+    // 構成要素を '/' で分解
+    $base   = explode('/', $base);
+    $target = explode('/', $target);
+
+    // 要素をはじめから順番に比較し同じ要素は排除
+    do {
+      $f = array_shift($base);
+      $t = array_shift($target);
+    } while ($f == $t);
+
+    // 要素をひとつ捨てすぎたので配列に戻す
+    array_unshift($base, $b);
+    array_unshift($target, $t);
+
+    // 残りの要素数を数える
+    $bcount = count($base);
+    $tcount = count($target);
+
+    // ひとつずつしか残ってないので同じディレクトリだ！
+    if ($bcount == 1 && $tcount == 1) {
+      // ならばファイル名だけを $url に格納
+      $url .= array_pop($target);
+    } else {
+      // 上位へ走査が必要な分 '../' を出力
+      if($bcount > 1) {
+        $url = str_repeat('../', $bcount - 1);
+      }
+      // $target のパスを '/' で連結して $url に格納
+      $url .= implode('/', $target);
+    }
+
+    // 出来上がったところで出力
+    return $url;
+  }/*}}}*/
+
+#}}}
+# custom#{{{
+snippet function
+abbr    function name(...) { ... }
+options word
+  function ${1:name}(${2}) {
+    ${3}
+  }
+
+snippet public
+abbr    public function name(...) { ... }
+options word
+  public function ${1:name}(${2}) {
+    ${3}
+  }
+
+snippet protected
+abbr    protected function name(...) { ... }
+options word
+  protected function ${1:name}(${2}) {
+    ${3}
+  }
+
+snippet private
+abbr    private function name(...) { ... }
+options word
+  private function ${1:name}(${2}) {
+    ${3}
+  }
+
+snippet static
+abbr    static function name(...) { ... }
+options word
+  static function ${1:name}(${2}) {
+    ${3}
+  }
+
+snippet this
+abbr    $this->...
+options word
+  $this->${1}
+
+snippet self
+abbr    self::...
+options word
+  self::${1}
+#}}}
+
+# classes #{{{
+snippet     Setting
+  class Setting {/*{{{*/
+    protected $_data;
+    public function __construct() {
+      $this->_data = array();
+    }
+    public function get($name) {
+      return $this->_data[$name];
+    }
+    public function set($name, $value) {
+      $this->_data[$name] = $value;
+      return $this;
+    }
+  }/*}}}*/
+#}}}
+# default {{{
+# docs#{{{
+snippet doc
+    /**
+     * ${1:undocumented class}
+     *
+     * @package ${2:default}
+     * @author `g:my.info.author`
+    **/
+
+# Class Variable - post doc
+snippet doc_vp
+    /**
+     * ${1:undocumented class variable}
+     *
+     * @var ${2:string}
+     **/
+
+# Class Variable
+snippet doc_v
+    /**
+     * ${3:undocumented class variable}
+     *
+     * @var ${4:string}
+     **/
+    ${1:var} $${2};${5}
+
+# Constant Definition - post doc
+snippet doc_dp
+    /**
+     * ${1:undocumented constant}
+     **/${2}
+
+# Constant Definition
+snippet doc_d
+    /**
+     * ${3:undocumented constant}
+     **/
+    define(${1}, ${2});${4}
+
+# Function - post doc
+snippet doc_fp
+    /**
+     * ${1:undocumented function}
+     *
+     * @return ${2:void}
+     * @author ${3:`g:my.info.author`}
+     **/
+
+# Function signature
+snippet doc_s
+    /**
+     * ${4:undocumented function}
+     *
+     * @return ${5:void}
+     * @author ${6:`g:my.info.author`}
+     **/
+    ${1}function ${2}(${3});${7}
+
+# Function
+snippet doc_f
+    /**
+     * ${4:undocumented function}
+     *
+     * @return ${5:void}
+     * @author ${6:`g:my.info.author`}
+     **/
+    ${1}function ${2}(${3})
+    {${7}
+    }
+
+# Header
+snippet doc_h
+    /**
+     * ${1}
+     *
+     * @author ${2:`g:my.info.author`}
+     * @version ${3:$Id$}
+     * @copyright ${4:$2}, `alpaca#function#today()`
+     * @package ${5:default}
+     **/
+
+    /**
+     * Define DocBlock
+     *//
+
+# Interface
+snippet doc_i
+    /**
+     * ${2:undocumented class}
+     *
+     * @package ${3:default}
+     * @author ${4:`g:my.info.author`}
+     **/
+
+    interface ${1} {
+      ${5}
+    } // END interface
+
+
+# Start Docblock
+snippet /*
+    /**
+     * ${1}
+     **/
+
+# }}}
+# global env#{{{
+snippet $_COOKIE
+    $_COOKIE['${1:variable}']
+
+snippet globals
+    $GLOBALS['${1:variable}']${2: = }${3:something}${4:;}
+
+snippet $_ENV
+    $_ENV['${1:variable}']
+
+snippet $_FILES
+    $_FILES['${1:variable}']
+
+snippet $_GET
+    $_GET['${1:variable}']
+
+snippet $_POST
+    $_POST['${1:variable}']
+
+snippet $_REQUEST
+    $_REQUEST['${1:variable}']
+
+snippet $_SERVER
+    $_SERVER['${1:variable}']
+
+snippet $_SESSION
+    $_SESSION['${1:variable}']
+#}}}
+# defaults#{{{
+snippet     <
+  <?php
+
+snippet class
+    class ${1:ClassName} {
+      ${2}
+    }
+
+snippet     func
+abbr        function
+prev_word     '^'
+    function ${1:name} (${2}) {
+      ${3:# code...}
+    }
+
+snippet     cons
+abbr        __construct
+  function __construct(${1}) {
+    ${2}
+  }
+
+snippet     header
+abbr        header
+prev_word   '^'
+   header('Location: ${1:http://www.example.com}');
+
+snippet     dump
+  var_dump(${1:variable})
+
+snippet php
+    <?php
+    ${1}
+
+snippet inc
+    include '${1:file}';
+
+snippet inco
+    include_once '${1:file}';
+
+snippet req
+    require '${1:file}';
+
+snippet reqo
+    require_once '${1:file}';
+
+
+snippet def
+    define('${1}'${2});
+
+# defined(...)
+snippet def?
+    ${1}defined('${2}')
+
+snippet wh
+    while (${1:/* condition */}) {
+        ${2:// code...}
+    }
+
+# do ... while
+snippet do
+    do {
+        ${2:// code... }
+    } while (${1:/* condition */});
+
+snippet if
+    if (${1:/* condition */}) {
+        ${2:// code...}
+    }
+
+snippet ife
+    if (${1}) {
+        ${2}
+    } else {
+        ${3}
+    }
+
+snippet else
+    else {
+        ${1}
+    }
+
+snippet elseif
+    elseif (${1}) {
+        ${2}
+    }
+
+# Tertiary conditional
+snippet t
+    $${1} = (${2}) ? ${3} : ${4};
+
+snippet switch
+    switch ($${1}) {
+        case '${2}':
+            ${3}
+            break;
+        default:
+            ${4}
+            break;
+    }
+
+snippet case
+    case '${1}':
+        ${2}
+        break;
+snippet for
+    for ($i = 0; $i < ${1:count}; $i++) {
+        ${2}
+    }
+
+snippet foreach
+    foreach ($${1} as $${2}) {
+      ${3}
+    }
+
+snippet array
+    ${1} = array(
+      '${2}' => ${3},
+    );
+#}}}
+##### URL Helper ######{{{
+snippet surl
+    <?php echo site_url("${1:segments}"); ?>${2}
+
+# Base URL
+snippet burl
+    <?php echo base_url(); ?>${1}
+
+# Current URL
+snippet curl
+    <?php echo current_url(); ?>${1}
+
+# Anchor
+snippet anchor
+    <?php echo anchor('${1:segments}', '${2:text}', '${3:attributes}'); ?>${4}
+
+# Safe Mailto
+snippet mailto
+    <?php echo safe_mailto('${1:email}', '${2:text}'); ?>${3}
+#}}}
+snippet     ob
+  ob_start();
+  ${1}
+  ob_get_clean();
+#}}}
+
+# PHP < 5.3
+
+snippet namespace
+abbr    namespace name;
+options word
+  namespace ${1:name};
+
+snippet use
+abbr    use name;
+options word
+  use ${1}${2: as ${3\}};
+
+snippet var_dump
+abbr    var_dump(val);
+options word
+  var_dump(${1:val});

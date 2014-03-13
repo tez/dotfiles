@@ -1,0 +1,201 @@
+include javascript.html.snip
+include javascript.mocha.snip
+include javascript.node.snip
+
+# Javascript Snippets {{{
+snippet     try
+abbr        try {} catch {}
+options     word
+  try {
+    ${1}
+  } catch(e) {
+    ${2}
+  }
+
+snippet     tryf
+abbr        try {} catch {} finary
+options     word
+  try {
+    ${1}
+  } catch(e) {
+    ${2}
+  } finally {
+    ${3}
+  }
+
+snippet     throw
+abbr        throw
+options     word
+  throw '${1}';
+
+snippet prototype
+abbr    Class.prototype.method = function () { ... };
+options word
+  ${1:class_name}.prototype.${2:method_name} = function (${3:first_argument}) {
+    ${4:// body...}
+  };
+
+snippet function
+abbr    function name() { ... }
+alias   fun
+options word
+  function ${1:function_name}(${2:argument}) {
+    ${3:// body...}
+  }
+
+snippet if
+abbr    if (condition) { ... }
+options word
+  if (${1:true}) {
+    ${2}
+  };
+
+snippet ife
+  if (${1:true}) {
+    ${2}
+  } else {
+    ${3}
+  };
+
+snippet switch
+abbr    switch(expression) { ... }
+options word
+  switch(${1:expression}) {
+    case '${3:case}':
+      ${4:// code}
+      break;
+    default:
+      ${2:// code}
+  }
+
+snippet case
+abbr    case
+options word
+  case '${1:case}':
+    ${2:// code}
+    break;
+
+snippet for
+abbr    for ( var i = 0; i < ...; i += 1 )
+options word
+  for (var i = 0; i < ${1}; i += 1) {
+    ${2}
+  }
+
+snippet forr
+abbr    for (var i = obj.length - 1; i < len; i += 1) {
+options word
+  for (var i = ${1:Things}.length - 1; i < len; i += 1) {
+    ${4:$1[$2]}
+  };
+
+snippet wh
+abbr    while () { ... }
+alias   while
+options word
+  while (${1:/* condition */}) {
+    ${2:/* code */}
+  }
+
+snippet do
+abbr    do
+alias   dowhile
+options word
+  do {
+    ${2:/* code */}
+  } while (${1:/* condition */});
+
+snippet :fun
+alias   :function
+abbr    method: function() { ... }
+options word
+  ${1:method_name}: function(${2:attribute}) {
+    ${4}
+  }${3:,}
+
+snippet timeout
+abbr    setTimeout(function() { ... }, time);
+alias   setTimeout
+options word
+  setTimeout(function() {${3}}${2}, ${1:10});
+
+snippet setInterval
+abbr    setInterval(function() { ... }, time);
+alias   setInterval
+options word
+  setInterval(function() {${3}}${2}, ${1:10});
+
+snippet clearInterval
+abbr    Clears a timer set with setInterval()
+options word
+  clearInterval(${1:interval_var})
+
+snippet clearTimeout()
+abbr    Clears a timer set with setTimeout()
+options word
+  clearTimeout(${1:timeout_var})
+
+snippet let
+abbr    let(...) { ... }
+options word
+  let(${1:x = x + 1}) {
+    ${2}
+  }
+#}}}
+
+# Function
+snippet isNaN
+abbr    isNaN()
+regexp  'is'
+options word
+  isNaN(${1})
+
+snippet isFinite
+abbr    isFinite()
+regexp  '$'
+options word
+  isFinite(${1})
+
+#snippet isInteger
+#abbr    isInteger()
+#options head
+#  isInteger(${1})
+#
+#snippet toInteger
+#abbr    toInteger()
+#options head
+#  toInteger(${1})
+
+# Web development#{{{
+snippet debug
+abbr    console.debug(...)
+options word
+  console.debug(${1:`@*`});
+
+snippet log
+abbr    console.log(...)
+options word
+  console.log(${1:`substitute(@*, "\n", ' ', 'g')`});
+
+snippet warn
+abbr    console.warn(...)
+options word
+  console.warn(${1:`substitute(@*, "\n", ' ', 'g')`});
+
+snippet error
+abbr    console.error(...)
+options word
+  console.error(${1:`substitute(@*, "\n", ' ', 'g')`});
+
+snippet info
+abbr    console.info(...)
+options word
+  console.info(${1:`substitute(@*, "\n", ' ', 'g')`});
+#}}}
+
+snippet super_method
+abbr    super_method
+options word
+  ${1:Child}.prototype.${2:method} = function() {
+    ${1:Parent}.prototype.$1.apply(this);
+  }

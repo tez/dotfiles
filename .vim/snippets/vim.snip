@@ -1,0 +1,354 @@
+# basic#{{{
+snippet elseif
+options head
+  elseif ${1:#:condition}
+    ${0:TARGET}
+
+snippet ifelse
+abbr    if else endif
+options head
+  if ${1:#:condition}
+    ${2:TARGET}
+  else
+    ${3}
+  endif
+
+snippet     while
+abbr        while ... endwhile
+options     head
+  while ${1:#:condition}
+    ${0:TARGET}
+  endwhile
+
+snippet augroup
+abbr    augroup ... augroup END
+alias   aug
+options word
+  augroup ${1:Name}
+    ${2}
+  augroup END
+
+snippet try
+abbr    try endtry
+options head
+  try
+    ${1:TARGET}
+  catch /${2:#:pattern}/
+    ${3}
+  endtry
+
+snippet tryfinally
+abbr    try ... finally ... endtry
+alias   tryf
+options head
+  try
+    ${1:TARGET}
+  finally
+    ${2}
+  endtry
+
+snippet catch
+abbr    catch /pattern/
+options head
+  catch ${1:/${2:#:pattern: empty, E484, Vim(cmdname):{errmsg\\}\}/}
+
+snippet echomsg
+alias   log
+options head
+  echomsg string(${1:TARGET})
+
+snippet command
+abbr    command call function
+options head
+  command! ${1:#:command_name} call ${2:#:func_name}
+
+snippet     redir
+abbr        redir => var
+options     head
+  redir => ${1:#:var}
+    ${2::TARGET}
+  redir END
+
+snippet for
+abbr    for value in array
+options word
+  for ${1:value} in ${2:array}
+    ${3}
+  endfor
+
+snippet for_range
+abbr    for index in range(0, len(object) - 1)
+options word
+  for index in range(0, len(object) - 1)
+    ${1}
+  endfor
+
+snippet ford
+abbr    for [key, value] in items(array)
+options word
+  for [${1:key}, ${2:value}] in items(${3:array})
+    ${4}
+  endfor
+#}}}
+
+# for plugins#{{{
+snippet     email
+abbr        `g:my.info.email`
+options     word
+  `g:my.info.email`
+
+snippet     myname
+abbr        `g:my.info.author`
+options     word
+  `g:my.info.author`
+
+snippet     exists?
+abbr        if exists('...') | let ... | endif
+options     word
+  if !exists('${1:valiable}')
+    let $1 = ${2}
+  endif
+
+snippet if
+abbr    if ... endif
+options word
+  if ${1:condition}
+    ${2}
+  endif
+
+snippet     loaded
+abbr        if exists('g:...') ${2:|| (v:version < 700)} ...
+options     word
+  if exists('g:${1:variable}') ${2:#:|| (v:version < 700)}
+    finish
+  endif
+  let g:$1 = 1
+
+  let s:save_cpo = &cpo
+  set cpo&vim
+
+  ${3}
+
+  let &cpo = s:save_cpo
+  unlet s:save_cpo
+
+snippet did_ftplugin
+abbr    did_ftplugin
+options word
+  if (exists('b:did_ftplugin'))
+    finish
+  endif
+  let b:did_ftplugin = 1
+
+  let s:cpo_save = &cpo
+  set cpo&vim
+
+  ${1}
+
+  let &cpo = s:cpo_save
+  unlet s:cpo_save
+
+snippet     mit
+  "=============================================================================
+  " FILE: ${1:`expand('%')`}
+  " AUTHOR: `g:my.info.author` <`g:my.info.email`>
+      " Last Modified: `strftime('%Y-%m-%d')`
+  " License: MIT license  {{{
+  "     Permission is hereby granted, free of charge, to any person obtaining
+  "     a copy of this software and associated documentation files (the
+  "     "Software"), to deal in the Software without restriction, including
+  "     without limitation the rights to use, copy, modify, merge, publish,
+  "     distribute, sublicense, and/or sell copies of the Software, and to
+  "     permit persons to whom the Software is furnished to do so, subject to
+  "     the following conditions:
+  "
+  "     The above copyright notice and this permission notice shall be included
+  "     in all copies or substantial portions of the Software.
+  "
+  "     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+  "     OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+  "     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+  "     IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+  "     CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+  "     TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+  "     SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  " }}}
+  "=============================================================================
+#}}}
+
+# for .vimrc#{{{
+snippet   neobundle#get
+  let bundle = neobundle#get('${1}')
+  function! bundle.hooks.on_source(bundle)
+    ${2}
+  endfunction
+#}}}
+
+# for syntax#{{{
+snippet     keyword
+abbr        syntax keyword
+options     word
+  syntax keyword ${1:group-name} ${2:option} ${3:key[word]} ${4:option}
+
+snippet     match
+abbr        syntax match
+options     word
+  syntax match ${1:group-name} ${2:option} ${3:excludenl} ${4:pattern} ${5:options}
+
+snippet     region
+abbr        syntax region
+options     word
+  syntax region ${1:group-name} ${2:option}
+    ${3:matchgroup={group-name}}
+    ${4:keepend}
+    ${5:extend}
+    ${6:excludenl }
+    start=${7:start_pattern}
+    ${8:skip=${9:skip_pattern\} }
+    end=${10:end_pattern}
+    ${11:options}
+
+snippet     contains
+abbr        contains=groupname
+options     word
+  contains=${1:groupname}
+
+snippet     containedin
+abbr        containedin=groupname
+options     word
+  containedin=${1:groupname}
+
+snippet     nextgroup
+abbr        nextgroup=groupname
+options     word
+  nextgroup=${1:nextgroup}
+
+snippet     matchgroup
+abbr        matchgroup=groupname
+options     word
+  matchgroup=${1:groupname}
+
+snippet     contained
+abbr        contained
+options     word
+  contained
+#}}}
+
+# for regexp {{{
+snippet \e
+abbr    [[:escape:]]
+options word
+alias   escape
+  [[:escape:]]
+
+snippet \t
+abbr    [[:tab:]]
+options word
+alias   tab
+  [[:tab:]]
+
+snippet \r
+abbr    [[:return:]]
+options word
+alias   return
+  [[:return:]]
+
+snippet \b
+abbr    [[:backspace:]]
+options word
+alias   backspace
+  [[:backspace:]]
+
+snippet alpha
+abbr    [[:alpha:]]
+options word
+  [[:alpha:]]
+
+snippet alnum
+abbr    [[:alnum:]]
+options word
+  [[:alnum:]]
+
+snippet blank
+abbr    [[:blank:]]
+options word
+  [[:blank:]]
+
+snippet space
+abbr    [[:space:]]
+options word
+  [[:space:]]
+
+snippet disit
+abbr    [[:disit:]]
+options word
+  [[:disit:]]
+
+snippet xdigit
+abbr    [[:xdigit:]]
+options word
+  [[:xdigit:]]
+
+snippet graph
+abbr    [[:graph:]]
+options word
+  [[:graph:]]
+
+snippet print
+abbr    [[:print:]]
+options word
+  [[:print:]]
+
+snippet upper
+abbr    [[:upper:]]
+options word
+  [[:upper:]]
+
+snippet lower
+abbr    [[:lower:]]
+options word
+  [[:lower:]]
+
+snippet punct
+abbr    [[:punct:]]
+options word
+  [[:punct:]]
+
+snippet cntrl
+abbr    [[:cntrl:]]
+options word
+  [[:cntrl:]]
+# }}}
+
+snippet     get
+abbr        let g:variable_name = get(g:, 'variable_name', default_value)
+options     word
+  let g:${1:variable_name} = get(g:, '$1', ${2:default_value})
+
+snippet auto_name
+abbr    auto_name
+options word
+  `join(split(substitute(expand("%:p"), '.*/autoload/\(.*\).vim$', '\1', 'g'), '/'), '#') . '#'`${1}
+
+snippet augroup_ftdetect
+abbr    augroup MyFt... augroup END
+options word
+  augroup MyFt`expand('%:r')`
+    autocmd!${1}
+  augroup END
+
+snippet function
+alias   func
+abbr    function! ...() { }
+options word
+  function! ${1:`join(split(substitute(expand("%:p"), '.*/autoload/\(.*\).vim$', '\1', 'g'), '/'), '#') . '#'`}${2}(${3})
+    ${4}
+  endfunction
+
+snippet complete_function
+abbr    function ...
+options word
+  function! auto_name${1}#complete(arg_lead, cmd_line, cursor_pos)
+    ${2}
+  endfunction
+

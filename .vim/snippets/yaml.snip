@@ -1,0 +1,30 @@
+snippet     share
+abbr        share
+prev_word      '^'
+    ${1:name}: &name
+        ${2}
+    <<: *${3:name}
+
+snippet     socket
+abbr database.ymlのsocketをすべての環境に対応する
+  <%
+  socket = [
+    "/tmp/mysqld.sock",
+    "/tmp/mysql.sock",
+    "/var/run/mysqld/mysqld.sock",
+    "/var/lib/mysql/mysql.sock",
+    "/opt/local/var/run/mysql5/mysqld.sock"
+  ].detect { |socket| File.exist?(socket) }
+  %>
+
+snippet travis_config
+abbr    travis_config
+options word
+  language: ruby
+  rvm:
+    - 2.1.0
+  gemfile:
+    - Gemfile
+  notifications:
+    email: false
+  script: bundle exec rspec spec

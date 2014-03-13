@@ -1,0 +1,55 @@
+snippet     files
+  <Files ~ ${1:(Guardfile)} >
+      order allow,deny
+      deny from all
+  </Files>
+
+snippet     php_flag_error
+  php_flag display_errors 'On'
+
+snippet     301
+  Redirect 301 ${1:path} ${2:url}
+
+snippet     redirect
+  Redirect ${1} ${2:path} ${3:url}
+
+snippet     addtype
+  AddType application/${1} ${2} ${3}
+
+snippet     addtypephp
+  AddType application/x-httpd-php .php .html
+
+snippet     dir
+  <Directory ${1:/}>
+    ${2}
+  </Directory>
+
+snippet     deny_htaccess
+  <Files ~ "^.*\.([Hh][Tt][Aa])">
+    order allow,deny
+    deny from all
+    satisfy all
+  </Files>
+
+snippet     rewrite_maintenance
+  <IfModule mod_rewrite.c>
+    RewriteEngine on
+    RewriteCond %{REQUEST_URI} !/maintenance.html$
+    RewriteCond %{REMOTE_ADDR} !^123\.456\.789\.000
+    RewriteRule $ /maintenance.html [R=302,L]
+  </IfModule>
+
+snippet     caching
+  <IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access 1 year"
+    ExpiresByType image/jpeg "access 1 year"
+    ExpiresByType image/gif "access 1 year"
+    ExpiresByType image/png "access 1 year"
+    ExpiresByType text/css "access 1 month"
+    ExpiresByType application/pdf "access 1 month"
+    ExpiresByType text/x-javascript "access 1 month"
+    ExpiresByType application/x-shockwave-flash "access 1 month"
+    ExpiresByType image/x-icon "access 1 year"
+    ExpiresDefault "access 2 days"
+  </IfModule>

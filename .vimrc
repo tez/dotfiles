@@ -216,8 +216,6 @@ cnoremap <C-p> <Up>
 cnoremap <Up>  <C-p>
 cnoremap <C-n> <Down>
 cnoremap <Down>  <C-n>
-" 補完にneocomplcacheを使う
-" source ~/dotfiles/.vimrc.completion.neocomplcache
 
 "===============================================================================
 " Encodeing
@@ -344,18 +342,21 @@ NeoBundle 'textobj-entire'
 NeoBundle 'textobj-jabraces'
 " <C-a>でtrue/false切替。他色々
 NeoBundle 'taku-o/vim-toggle'
+"
+NeoBundle 'AndrewRadev/switch.vim'
 "-------------------------------------------------------------------------------
 " 補完
 "-------------------------------------------------------------------------------
-" neocomplcache.vim : 究極のVim的補完環境
-NeoBundle 'Shougo/neocomplcache'
-" neocomplcacheのsinpet補完
-NeoBundle 'Shougo/neosnippet.git'
+" Neocomplete : 究極のVim的補完環境
+NeoBundle 'Shougo/neocomplete'
+" Neocompleteのsinpet補完
+NeoBundle 'Shougo/neosnippet'
+NeoBundle 'Shougo/neosnippet-snippets'
 " various langueages snippets
 NeoBundle 'honza/vim-snippets'
 " for rsense
-NeoBundle 'm2ym/rsense'
-NeoBundle 'taichouchou2/vim-rsense'
+NeoBundle 'alpaca-tc/vim-rsense'
+
 "-------------------------------------------------------------------------------
 " 検索／移動
 "-------------------------------------------------------------------------------
@@ -396,11 +397,15 @@ NeoBundle 'Pydiction'
 NeoBundle 'taglist.vim'
 " エラーがある場所をhilight
 NeoBundle 'errormarker.vim'
+" rubycomplete
+NeoBundle 'scrooloose/syntastic'
 "-------------------------------------------------------------------------------
 " 言語
 "-------------------------------------------------------------------------------
 " haml
 NeoBundle 'haml.zip'
+" slim
+NeoBundle 'slim-template/vim-slim'
 " JavaScript
 NeoBundle 'JavaScript-syntax'
 " jQuery
@@ -474,8 +479,6 @@ NeoBundle 'tsukkee/lingr-vim'
 NeoBundle 'tpope/vim-fugitive'
 " ステータスラインをカッコよくする
 NeoBundle 'itchyny/lightline.vim'
-" Redmine on Vim
-NeoBundle 'mattn/vim-metarw-redmine'
 " A framework to read/write fake:path
 NeoBundle 'kana/vim-metarw'
 " shows a git diff in the 'gutter' (sign column)
@@ -496,6 +499,7 @@ NeoBundle 'jpo/vim-railscasts-theme'
 "-------------------------------------------------------------------------------
 " unite.vim : - すべてを破壊し、すべてを繋げ - vim scriptで実装されたanythingプラグイン
 NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'tsukkee/unite-help'
 NeoBundle 'h1mesuke/unite-outline'
 NeoBundle 'basyura/unite-rails'
@@ -769,6 +773,13 @@ let g:errormarker_disablemappings = 1
 nmap <silent> <unique> <Leader>ec :ErrorAtCursor<CR>
 
 "-------------------------------------------------------------------------------
+" syntastic.vim
+"-------------------------------------------------------------------------------
+let g:syntastic_mode_map = { 'mode': 'passive', 'active_filetypes': ['ruby'] }
+let g:syntastic_ruby_checkers = ['rubocop']
+let g:syntastic_quiet_messages = {'level': 'warnings'}
+
+"-------------------------------------------------------------------------------
 " vimshell
 "-------------------------------------------------------------------------------
 let g:vimshell_user_prompt = 'fnamemodify(getcwd(), ":~")'
@@ -958,15 +969,211 @@ let g:syntastic_enable_highlighting = 1
 let g:syntastic_auto_loc_list=1
 
 "-------------------------------------------------------------------------------
-" toggle.vim
+" switch.vim
 "-------------------------------------------------------------------------------
-imap <C-A> <Plug>ToggleI
-nmap <C-A> <Plug>ToggleN
-vmap <C-A> <Plug>ToggleV
+nnoremap ! :Switch<CR>
+let hooks = neobundle#get_hooks('switch.vim')
+function! hooks.on_source(bundle) "{{{
+  "{{{
+  let g:switch_no_builtins = 0
+  let s:switch_definition_builtins = {
+        \ }
+  let s:switch_definition = {
+        \ '_': [
+        \   ['is', 'are'],
+        \   { '\Cenable': '\Cdisable' },
+        \   { '\CEnable': '\CDisable' },
+        \   { '\Ctrue': 'false' },
+        \   { '\CTrue': 'False' },
+        \   { '\Cfalse': 'true' },
+        \   { '\CFalse': 'True' },
+        \   { '（\([^）]\+\)）' : '(\1)' },
+        \   ['left', 'right'],
+        \   ['top', 'bottom'],
+        \   ['north', 'south'],
+        \   ['east', 'west'],
+        \   ['under', 'over'],
+        \   ['start', 'stop'],
+        \   ['begin', 'end', 'finish'],
+        \   ['up', 'down'],
+        \   ['next', 'previous'],
+        \   ['read', 'write'],
+        \   ['draw', 'erase'],
+        \   ['old', 'new'],
+        \   ['open', 'close'],
+        \   ['first', 'last'],
+        \   ['minminimun', 'maxmaxinum'],
+        \   ['yes', 'no'],
+        \   ['head', 'tail'],
+        \   ['lose', 'find'],
+        \   ['in', 'out'],
+        \   ['input', 'output'],
+        \   ['export', 'import'],
+        \   ['large', 'big', 'small'],
+        \   ['parent', 'child'],
+        \   ['push', 'pull'],
+        \   ['fast', 'slow'],
+        \   ['good', 'bad'],
+        \   ['same', 'different'],
+        \   ['add', 'remove'],
+        \   ['insert', 'delete'],
+        \   ['create', 'destroy'],
+        \   ['prefix', 'suffix'],
+        \ ],
+        \ 'sass,scss,css' : [
+        \   ['solid', 'dotted'],
+        \   ['left', 'right'],
+        \ ],
+        \ 'coffee' : [
+        \   ['if', 'unless'],
+        \   { '^\(.*\)->': '\1=>' },
+        \   { '^\(.*\)=>': '\1->' },
+        \ ],
+        \ 'Gemfile,Berksfile' : [
+        \   ['=', '<', '<=', '>', '>=', '~>'],
+        \ ],
+        \ 'html,php' : [
+        \   { '<!--\([a-zA-Z0-9 /]\+\)--></\(div\|ul\|li\|a\)>' : '</\2><!--\1-->' },
+        \ ],
+        \ 'liquid' : [
+        \   ['if', 'unless'],
+        \   ['endif', 'endunless'],
+        \ ],
+        \ 'Rakefile,Gemfile,ruby,ruby.rspec,eruby,haml' : [
+        \   ['if', 'unless'],
+        \   ['while', 'until'],
+        \   ['.blank?', '.present?'],
+        \   ['include', 'extend', 'prepend'],
+        \   ['class', 'module'],
+        \   ['.inject', '.delete_if'],
+        \   ['attr_accessor', 'attr_reader', 'attr_writer'],
+        \   { '%r\({[^}]\+\)}' : '/\1/' },
+        \   { ':\(\k\+\)\s*=>\s*': '\1: ' },
+        \   { '\<\(\k\+\): ':      ':\1 => ' },
+        \   { '\.\%(tap\)\@!\(\k\+\)':   '.tap { |o| puts o.inspect }.\1' },
+        \   { '\.tap { |o| \%(.\{-}\) }': '' },
+        \   { '\(\k\+\)(&:\(\S\+\))': '\1 { |x| x\.\2 }' },
+        \   { '\(\k\+\)\s\={ |\(\k\+\)| \2.\(\S\+\) }': '\1(&:\3)' },
+        \ ],
+        \ 'ruby,rdoc' : [
+        \   ['=', '==', '===', '====', '====='],
+        \   [':nodoc:', ':doc:', ':notnew:'],
+        \ ],
+        \ 'ruby.application_template' : [
+        \   ['yes?', 'no?'],
+        \   ['lib', 'initializer', 'file', 'vendor', 'rakefile'],
+        \   ['controller', 'model', 'view', 'migration', 'scaffold'],
+        \ ],
+        \ 'ruby.rspec': [
+        \   ['it_has_behavior', 'it_should_behave_like'],
+        \   ['describe', 'context', 'specific', 'example'],
+        \   ['before', 'after'],
+        \   ['be_true', 'be_false'],
+        \   ['be_truthy', 'be_falsy'],
+        \   ['get', 'post', 'put', 'delete'],
+        \   ['==', 'eql', 'equal'],
+        \   { '\.should_not': '\.should' },
+        \   ['\.to_not', '\.to'],
+        \   { '\([^. ]\+\)\.should\(_not\|\)': 'expect(\1)\.to\2' },
+        \   { 'expect(\([^. ]\+\))\.to\(_not\|\)': '\1.should\2' },
+        \ ],
+        \ 'rails' : [
+        \   [100, ':continue', ':information'],
+        \   [101, ':switching_protocols'],
+        \   [102, ':processing'],
+        \   [200, ':ok', ':success'],
+        \   [201, ':created'],
+        \   [202, ':accepted'],
+        \   [203, ':non_authoritative_information'],
+        \   [204, ':no_content'],
+        \   [205, ':reset_content'],
+        \   [206, ':partial_content'],
+        \   [207, ':multi_status'],
+        \   [208, ':already_reported'],
+        \   [226, ':im_used'],
+        \   [300, ':multiple_choices'],
+        \   [301, ':moved_permanently'],
+        \   [302, ':found'],
+        \   [303, ':see_other'],
+        \   [304, ':not_modified'],
+        \   [305, ':use_proxy'],
+        \   [306, ':reserved'],
+        \   [307, ':temporary_redirect'],
+        \   [308, ':permanent_redirect'],
+        \   [400, ':bad_request'],
+        \   [401, ':unauthorized'],
+        \   [402, ':payment_required'],
+        \   [403, ':forbidden'],
+        \   [404, ':not_found'],
+        \   [405, ':method_not_allowed'],
+        \   [406, ':not_acceptable'],
+        \   [407, ':proxy_authentication_required'],
+        \   [408, ':request_timeout'],
+        \   [409, ':conflict'],
+        \   [410, ':gone'],
+        \   [411, ':length_required'],
+        \   [412, ':precondition_failed'],
+        \   [413, ':request_entity_too_large'],
+        \   [414, ':request_uri_too_long'],
+        \   [415, ':unsupported_media_type'],
+        \   [416, ':requested_range_not_satisfiable'],
+        \   [417, ':expectation_failed'],
+        \   [422, ':unprocessable_entity'],
+        \   [423, ':precondition_required'],
+        \   [424, ':too_many_requests'],
+        \   [426, ':request_header_fields_too_large'],
+        \   [500, ':internal_server_error'],
+        \   [501, ':not_implemented'],
+        \   [502, ':bad_gateway'],
+        \   [503, ':service_unavailable'],
+        \   [504, ':gateway_timeout'],
+        \   [505, ':http_version_not_supported'],
+        \   [506, ':variant_also_negotiates'],
+        \   [507, ':insufficient_storage'],
+        \   [508, ':loop_detected'],
+        \   [510, ':not_extended'],
+        \   [511, ':network_authentication_required'],
+        \ ],
+        \ 'apache': [
+        \   ['None', 'All']
+        \ ],
+        \ 'c' : [
+        \   ['signed', 'unsigned'],
+        \ ],
+        \ 'css,scss,sass': [
+        \   ['collapse', 'separate'],
+        \   ['margin', 'padding'],
+        \ ],
+        \ 'gitrebase' : [
+        \   ['pick', 'reword', 'edit', 'squash', 'fixup', 'exec'],
+        \   ['^p\s', 'pick '],
+        \   ['^r\s', 'reword '],
+        \   ['^e', 'edit '],
+        \   ['^s', 'squash '],
+        \   ['^f', 'fixup '],
+        \   ['^e', 'exec '],
+        \ ],
+        \ 'vim,Berksfile,Gemfile' : [
+        \   { '\vhttps{,1}://github.com/([^/]+)/([^/]+)(\.git){,1}': '\1/\2' },
+        \ ],
+        \ 'vim' : [
+        \   ['call', 'return', 'echo'],
+        \   ['NeoBundle', 'NeoBundleLazy'],
+        \   ['echo', 'echomsg'],
+        \   ['if', 'else'],
+        \   { 'let\s\+\([gstb]:\a\+\|\a\+\)\s*\(.\|+\|-\|*\|\\\)\{,1}=\s*\(\a\+\)\s*.*$' : 'unlet \1' },
+        \ ],
+        \ 'markdown' : [
+        \   ['[ ]', '[x]'],
+        \   ['#', '##', '###', '####', '#####'],
+        \   { '\(\*\*\|__\)\(.*\)\1': '_\2_' },
+        \   { '\(\*\|_\)\(.*\)\1': '__\2__' },
+        \ ]
+        \ }
+  "}}}
 
-let g:toggle_pairs = { 'and':'or', 'or':'and', 'if':'unless', 'unless':'if', 'yes':'no', 'no':'yes', 'enable':'disable', 'disable':'enable', 'pick':'reword', 'reword':'fixup', 'fixup':'squash', 'squash':'edit', 'edit':'exec', 'exec':'pick' }
-
-
+endfunction"}}}
+unlet hooks
 
 "-------------------------------------------------------------------------------
 " vim-rails.vim
@@ -993,7 +1200,7 @@ function! SetUpRailsSetting()
   nmap <buffer><Space>s :Rspec<Space>
   nmap <buffer><Space>p :Rpreview<CR>
   nmap <buffer><Space>t :Runittest<CR>
-  au FileType ruby,eruby,ruby.rspec let g:neocomplcache_dictionary_filetype_lists = {
+  au FileType ruby,eruby,ruby.rspec let g:neocomplete#sources#dictionary#dictionaries = {
         \'ruby' : $HOME.'/.vim/dict/rails.dict',
         \'eruby' : $HOME.'/.vim/dict/rails.dict'
         \}
@@ -1001,13 +1208,6 @@ function! SetUpRailsSetting()
   setl dict+=~/.vim/dict/ruby.dict
 endfunction
 autocmd User Rails call SetUpRailsSetting()
-
-
-"-------------------------------------------------------------------------------
-" mattn/vim-metarw-redmine
-"-------------------------------------------------------------------------------
-let g:metarw_redmine_server = 'http://redmine.dev.scaleout.jp'
-let g:metarw_redmine_apikey = '2ed945f405865ec799ff91b7bb364215f932c51c'
 
 "-------------------------------------------------------------------------------
 " GoLang gocde
@@ -1157,33 +1357,24 @@ let g:vimfiler_force_overwrite_statusline = 0
 let g:vimshell_force_overwrite_statusline = 0
 
 "===============================================================================
-" AutoComplete (neocomplecache.vim)
+" AutoComplete (neocomplete.vim)
 "===============================================================================
-" AutoComplPopを無効にする
+" Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
-" NeoComplCacheを有効にする
-let g:neocomplcache_enable_at_startup = 1
-" 補完が自動で開始される文字数
-let g:neocomplcache_auto_completion_start_length = 3
-" smarrt case有効化。 大文字が入力されるまで大文字小文字の区別を無視する
-let g:neocomplcache_enable_smart_case = 1
-" camle caseを有効化。大文字を区切りとしたワイルドカードのように振る舞う
-let g:neocomplcache_enable_camel_case_completion = 1
-" _(アンダーバー)区切りの補完を有効化
-let g:neocomplcache_enable_underbar_completion = 1
-" シンタックスをキャッシュするときの最小文字長を3に
-let g:neocomplcache_min_syntax_length = 3
-" neocomplcacheを自動的にロックするバッファ名のパターン
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-" -入力による候補番号の表示
-let g:neocomplcache_enable_quick_match = 1
-" 補完候補の一番先頭を選択状態にする(AutoComplPopと似た動作)
-let g:neocomplcache_enable_auto_select = 1
-"ポップアップメニューで表示される候補の数。初期値は100
-let g:neocomplcache_max_list = 20
+" Use neocomplete.
+let g:neocomplete#enable_at_startup = 1
+" Use smartcase.
+let g:neocomplete#enable_smart_case = 1
+" Set minimum syntax keyword length.
+let g:neocomplete#sources#syntax#min_keyword_length = 3
+let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+" AutoComplPop like behavior.
+let g:neocomplete#enable_auto_select = 1
+" rails.vim
+let g:neocomplete#force_overwrite_completefunc = 1
 
 " Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
+let g:neocomplete#sources#dictionary#dictionaries = {
     \ 'default' : '',
     \ 'vimshell' : $HOME.'/.vimshell_hist',
     \ 'scala' : $HOME.'/.vim/bundle/vim-scala/dict/scala.dict',
@@ -1195,121 +1386,96 @@ let g:neocomplcache_dictionary_filetype_lists = {
     \ 'perl' : $HOME.'/.vim/dict/perl.dict',
     \ 'php' : $HOME.'/.vim/dict/php.dict',
     \ 'scheme' : $HOME.'/.vim/dict/scheme.dict',
-    \ 'vm' : $HOME.'/.vim/dict/vim.dict'
+    \ 'vim' : $HOME.'/.vim/dict/vim.dict'
     \ }
 
 " Define keyword.
-if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
+if !exists('g:neocomplete#keyword_patterns')
+    let g:neocomplete#keyword_patterns = {}
 endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+let g:neocomplete#keyword_patterns['default'] = '\h\w*'
 
-" ユーザー定義スニペット保存ディレクトリ
-let g:neocomplcache_snippets_dir = $HOME.'/.vim/snippets'
+" Plugin key-mappings.
+inoremap <expr><C-g>     neocomplete#undo_completion()
+inoremap <expr><C-l>     neocomplete#complete_common_string()
 
-" スニペット
-imap <C-y> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+function! s:my_cr_function()
+  return neocomplete#close_popup() . "\<CR>"
+  " For no inserting <CR> key.
+  "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
+endfunction
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplete#close_popup()
+inoremap <expr><C-e>  neocomplete#cancel_popup()
+" Close popup by <Space>.
+"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+
+" For cursor moving in insert mode(Not recommended)
+"inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
+"inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
+"inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
+"inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
+" Or set this.
+"let g:neocomplete#enable_cursor_hold_i = 1
+" Or set this.
+"let g:neocomplete#enable_insert_char_pre = 1
+
+
+" Shell like behavior(not recommended).
+"set completeopt+=longest
+"let g:neocomplete#enable_auto_select = 1
+"let g:neocomplete#disable_auto_complete = 1
+"inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
+
+" Enable omni completion.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType php setlocal omnifunc=phpcomplete#CompletePHP
+autocmd FileType c setlocal omnifunc=ccomplete#Complete
+autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+  let g:neocomplete#sources#omni#input_patterns = {}
+endif
+let g:neocomplete#sources#omni#input_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplete#sources#omni#input_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
+let g:neocomplete#sources#omni#input_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
+
+" Neosnippet Configuration
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
 
 " SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
 
 " For snippet_complete marker.
 if has('conceal')
   set conceallevel=2 concealcursor=i
 endif
 
-" snipet template dirs
-let g:neosnippet#snippets_directory = '~/.vim/snipmate-snippets/snippets  ~/dotfiles/.vim/snippets'
+" Enable snipMate compatibility feature.
+let g:neosnippet#enable_snipmate_compatibility = 1
 
-" 補完を選択しpopupを閉じる
-" inoremap <expr><C-y> neocomplcache#close_popup()
-" 補完をキャンセルしpopupを閉じる
-" inoremap <expr><C-e> neocomplcache#cancel_popup()
-" TABで補完できるようにする
-inoremap <expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-" undo
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-" 補完候補の共通部分までを補完する
-inoremap <expr><C-s> neocomplcache#complete_common_string()
-" C-kを押すと行末まで削除
-" inoremap <C-k> <C-o>D
-" C-nでneocomplcache補完
-inoremap <expr><C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
-" C-pでkeyword補完
-inoremap <expr><C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
-" 補完候補が出ていたら確定、なければ改行
-inoremap <expr><CR>  pumvisible() ? neocomplcache#close_popup() : "<CR>"
-
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-x><C-o> &filetype == 'vim' ? "\<C-x><C-v><C-p>" : neocomplcache#manual_omni_complete()
-
-" buffer開いたらneoconでcache
-autocmd BufReadPost,BufEnter,BufWritePost :NeoComplCacheCachingBuffer <buffer>
-
-" FileType毎のOmni補完を設定
-autocmd FileType python     setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType html       setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType css        setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType xml        setlocal omnifunc=xmlcomplete#CompleteTags
-autocmd FileType php        setlocal omnifunc=phpcomplete#CompletePHP
-autocmd FileType c          setlocal omnifunc=ccomplete#Complete
-autocmd FileType ruby       setlocal omnifunc=rubycomplete#Complete
-
-" Enable heavy omni completion.
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.go = '\h\w*\.\?'
-
-" autocmd FileType ruby let g:neocomplcache_source_disable = {
-  " \ 'include_complete' : 1,
-  " \ 'omni_complete' : 1
-" \ }
-" autocmd FileType ruby let g:neocomplcache_source_disable = {
-  " \ 'include_complete' : 1
-" \ }
-
-"インクルードパスの指定
-let g:neocomplcache_include_paths = {
-  \ 'cpp'  : '.,/opt/local/include/gcc46/c++,/opt/local/include,/usr/include',
-  \ 'c'    : '.,/usr/include',
-  \ 'ruby' : '.,$HOME/.rvm/rubies/**/lib/ruby/1.8/',
-  \ }
-"インクルード文のパターンを指定
-let g:neocomplcache_include_patterns = {
-  \ 'cpp' : '^\s*#\s*include',
-  \ 'ruby' : '^\s*require',
-  \ 'perl' : '^\s*use',
-  \ }
-"インクルード先のファイル名の解析パターン
-let g:neocomplcache_include_exprs = {
-  \ 'ruby' : substitute(v:fname,'::','/','g')
-  \ }
-" ファイルを探す際に、この値を末尾に追加したファイルも探す。
-let g:neocomplcache_include_suffixes = {
-  \ 'ruby' : '.rb',
-  \ 'haskell' : '.hs'
-  \ }
-
-" for rsense
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-let g:rsenseUseOmniFunc = 1
-let g:rsenseHome = expand('~/src/rsense-0.3')
-
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+" Tell Neosnippet about the other snippets
+let g:neosnippet#snippets_directory = '~/.vim/snipmate-snippets/snippets ~/.vim/snippets'
 "===============================================================================
 " Tags
 "===============================================================================
@@ -1338,3 +1504,4 @@ nnoremap tl  ;<C-u>tags<CR>
 " ;でコマンド入力( ;と:を入れ替)
 noremap ; :
 
+let g:rsenseHome = expand("~/lib/rsense-0.3")

@@ -212,6 +212,17 @@ linux*)
   ;;
 esac
 
+## rsence configuration
+#
+export RSENSE_HOME=$HOME/lib/rsense-0.3
+
+## nodebrew configration
+#
+export NODEBREW_ROOT="${HOME}/.nodebrew"
+if [ -d "${NODEBREW_ROOT}" ]; then
+  export PATH="${NODEBREW_ROOT}/current/bin:${PATH}"
+fi
+
 ## rbenv configration
 #
 # enable shims and autocompletion
@@ -220,3 +231,4 @@ if [ -d "${RBENV_ROOT}" ]; then
   export PATH="${RBENV_ROOT}/bin:${PATH}"
   eval "$(rbenv init -)"
 fi
+

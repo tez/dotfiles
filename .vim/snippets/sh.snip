@@ -1,0 +1,28 @@
+snippet     opt
+abbr        getopt
+prev_word   '^'
+    while getopts ${1:a:b} OPT
+    do
+    case $OPT in
+        "${2}" ) ${3:code $OPTARG} ;;
+    esac
+    done
+
+snippet     yes
+    read -p "${1:message} y/n " yn
+    if [ $yn = "y" -o $yn = "Y" ]; then
+        ${2}
+    fi
+snippet     me
+    ${1%/*}
+
+snippet     receive-post
+  #!/bin/sh
+
+  www_dir="${HOME}/app"
+  (cd ${www_dir};git --git-dir=.git pull;)
+
+snippet     read
+  read -p "${1:message}" yn
+  if [ $yn = "y" -o $yn = "Y" ]; then
+  fi
