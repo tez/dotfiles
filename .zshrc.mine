@@ -189,21 +189,21 @@ esac
 #esac
 
 
-## alias configration
+## alias configuration
 #
+# use tmux 255 colors
+alias tmux='tmux -2'
 case "${OSTYPE}" in
 freebsd*|darwin*)
   ;;
 linux*)
-  # use tmux 256 colors
-  alias tmux='tmux -2'
   # sudo apt-get install xsel
   alias pbcopy='xsel --clipboard --input'
   alias pbpaste='xsel --clipboard --output'
   ;;
 esac
 
-## each os configration
+## each os configuration
 #
 case "${OSTYPE}" in
 freebsd*|darwin*)
@@ -216,14 +216,14 @@ esac
 #
 export RSENSE_HOME=$HOME/lib/rsense-0.3
 
-## nodebrew configration
+## nodebrew configuration
 #
 export NODEBREW_ROOT="${HOME}/.nodebrew"
 if [ -d "${NODEBREW_ROOT}" ]; then
   export PATH="${NODEBREW_ROOT}/current/bin:${PATH}"
 fi
 
-## rbenv configration
+## rbenv configuration
 #
 # enable shims and autocompletion
 export RBENV_ROOT="${HOME}/.rbenv"
@@ -232,3 +232,7 @@ if [ -d "${RBENV_ROOT}" ]; then
   eval "$(rbenv init -)"
 fi
 
+## term configuration
+#
+# export TERM=xterm-256color
+export TERM=screen-256color

@@ -340,8 +340,6 @@ NeoBundle 'textobj-rubyblock'
 NeoBundle 'textobj-entire'
 " 「foo」 or 【bar】などをtext-objectに
 NeoBundle 'textobj-jabraces'
-" <C-a>でtrue/false切替。他色々
-NeoBundle 'taku-o/vim-toggle'
 "
 NeoBundle 'AndrewRadev/switch.vim'
 "-------------------------------------------------------------------------------
@@ -391,6 +389,10 @@ NeoBundle 'SQLUtilities'
 NeoBundle 'vim-ruby/vim-ruby'
 " rails.vim : rails的なアレ
 NeoBundle 'tpope/vim-rails'
+"
+NeoBundle 'thoughtbot/vim-rspec'
+"
+NeoBundle 'asux/vim-capybara'
 " Pydiction : Python用の入力補完
 NeoBundle 'Pydiction'
 " ソースコード上のメソッド宣言、変数宣言の一覧を表示
@@ -471,8 +473,6 @@ NeoBundle 'L9'
 NeoBundle 'thinca/vim-openbuf'
 " vimdoc 日本語
 NeoBundle 'yuroyoro/vimdoc_ja'
-" vim上のtwitter client
-" NeoBundle 'TwitVim'
 " Lingrのclient
 NeoBundle 'tsukkee/lingr-vim'
 " vimからGit操作する
@@ -494,10 +494,10 @@ NeoBundle 'desert256.vim'
 NeoBundle 'zenorocha/dracula-theme'
 NeoBundle 'tomasr/molokai'
 NeoBundle 'jpo/vim-railscasts-theme'
+NeoBundle 'davidkariuki/sexy-railscasts-256-theme'
 "-------------------------------------------------------------------------------
 " Unite
 "-------------------------------------------------------------------------------
-" unite.vim : - すべてを破壊し、すべてを繋げ - vim scriptで実装されたanythingプラグイン
 NeoBundle 'Shougo/unite.vim'
 NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'tsukkee/unite-help'
@@ -770,7 +770,7 @@ xmap <silent> ie <Plug>CamelCaseMotion_ie
 "-------------------------------------------------------------------------------
 " disable default shortcut mapping and re-define to <Leader>ec
 let g:errormarker_disablemappings = 1
-nmap <silent> <unique> <Leader>ec :ErrorAtCursor<CR>
+nmap <silent> <unique> <Leader>ecu :ErrorAtCursor<CR>
 
 "-------------------------------------------------------------------------------
 " syntastic.vim
@@ -918,41 +918,14 @@ cnoremap UH Unite help<Enter>
 cnoremap UO Unite outline<Enter>
 
 "-------------------------------------------------------------------------------
-" quickrun.vim
+" RSpec.vim
 "-------------------------------------------------------------------------------
-let g:quickrun_config = {}
-let g:quickrun_config._ = {
-  \ 'runner' : 'vimproc',
-  \ "runner/vimproc/updatetime" : 60,
-  \ 'outputter/buffer/split' : ':botright 8sp',
-  \ 'outputter/buffer/close_on_empty' : 1
-  \}
+" RSpec.vim mappings
+" map <Leader>t :call RunCurrentSpecFile()<CR>
+" map <Leader>s :call RunNearestSpec()<CR>
+" map <Leader>l :call RunLastSpec()<CR>
+" map <Leader>a :call RunAllSpecs()<CR>
 
-let g:quickrun_config['rspec/bundle'] = {
-  \ 'type': 'rspec/bundle',
-  \ 'command': "rspec",
-  \ 'cmdopt': "-l %{line('.')}",
-  \ 'exec': "bundle exec %c %o %s ",
-  \ 'outputter/buffer/filetype': 'rspec-result',
-  \ 'filetype': 'rspec-result'
-  \}
-let g:quickrun_config['rspec/normal'] = {
-  \ 'type': 'rspec/normal',
-  \ 'command': "rspec",
-  \ 'cmdopt': "-l %{line('.')}",
-  \ 'exec': '%c %o %s',
-  \ 'outputter/buffer/filetype': 'rspec-result',
-  \ 'filetype': 'rspec-result'
-  \}
-function! RSpecQuickrun()
-  let b:quickrun_config = {'type' : 'rspec/bundle'}
-endfunction
-
-" <C-c> で実行を強制終了させる
-" quickrun.vim が実行していない場合には <C-c> を呼び出す
-nnoremap <expr><silent> <C-c> quickrun#is_running() ?  quickrun#sweep_sessions() : "\<C-c>"
-
-autocmd BufReadPost *_spec.rb call RSpecQuickrun()
 "-------------------------------------------------------------------------------
 " Pydiction
 "-------------------------------------------------------------------------------
@@ -1218,7 +1191,7 @@ set completeopt=menu,preview
 " Themes & Colors
 "===============================================================================
 " テーマの設定
-colorscheme railscasts
+colorscheme sexy-railscasts-256
 " ターミナルタイプによるカラー設定
 set t_Co=256
 " ハイライト on
@@ -1427,13 +1400,13 @@ inoremap <expr><S-TAB> pumvisible() ? "\<Up>" : "\<S-TAB>"
 
 " <C-h>, <BS>: close popup and delete backword char.
 inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"  
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
 inoremap <expr><C-y>  neocomplcache#close_popup()
 inoremap <expr><C-e>  neocomplcache#cancel_popup()
 " Close popup by <Space>.
 "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
 
-" <C-n> neocomplcache補完 
+" <C-n> neocomplcache補完
 inoremap <expr><C-n>  pumvisible() ? "\<C-n>" : "\<C-x>\<C-u>\<C-p>"
 " <C-p> keyword補完
 inoremap <expr><C-p> pumvisible() ? "\<C-p>" : "\<C-p>\<C-n>"
